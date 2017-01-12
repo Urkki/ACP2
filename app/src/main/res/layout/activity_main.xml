@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto" >
     <data>
-        <variable name="apps" type="ads.mobile.acp2demo.AppsList" />
+        <variable name="apps" type="ads.mobile.acp2demo.classes.AppsList" />
     </data>
     <RelativeLayout
         android:id="@+id/activity_main"

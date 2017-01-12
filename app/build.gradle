@@ -21,6 +21,12 @@ android {
         enabled = true
     }
 }
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+    maven { url 'https://dl.bintray.com/rvalerio/maven' }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -28,5 +34,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.github.recruit-lifestyle:FloatingView:2.0'
+    compile 'com.rvalerio:fgchecker:1.0.1'
     testCompile 'junit:junit:4.12'
 }

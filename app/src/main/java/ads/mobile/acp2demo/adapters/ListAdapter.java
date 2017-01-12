@@ -1,4 +1,4 @@
-package ads.mobile.acp2demo;
+package ads.mobile.acp2demo.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -6,16 +6,11 @@ import android.databinding.ObservableArrayList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
-import java.util.List;
-
+import ads.mobile.acp2demo.classes.AppInfo;
+import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.databinding.AppListElementLayoutBinding;
-
-import static android.R.id.list;
 
 public class ListAdapter extends BaseAdapter {
 

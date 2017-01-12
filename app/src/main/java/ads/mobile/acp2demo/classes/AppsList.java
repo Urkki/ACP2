@@ -1,4 +1,4 @@
-package ads.mobile.acp2demo;
+package ads.mobile.acp2demo.classes;
 
 import android.content.Context;
 import android.databinding.ObservableArrayList;
@@ -61,6 +61,20 @@ public class AppsList implements Serializable {
         return true;
     }
 
+    public ArrayList<String> getSelectedAppPackageNames(){
+        ArrayList<String> selectedApps = new ArrayList<>();
+        try {
+            for (AppInfo i : this.appsList) {
+                if(i.IsSelected){
+                    selectedApps.add(i.appPackageName);
+                }
+            }
+        } catch ( Exception e){
+            e.printStackTrace();
+        }
+
+        return selectedApps;
+    }
 
     public static AppsList load(Context c) {
         String path = c.getFilesDir().getAbsolutePath();

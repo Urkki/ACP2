@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" >
     <data>
-        <variable type="ads.mobile.acp2demo.AppInfo" name="appInfo" />
+        <variable type="ads.mobile.acp2demo.classes.AppInfo" name="appInfo" />
     </data>
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -15,9 +15,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
             android:focusable="false"
-            android:textIsSelectable="true"
+            android:textIsSelectable="false"
             android:focusableInTouchMode="false"
-            android:checked="@={appInfo.IsUsed}"
+            android:checked="@={appInfo.IsSelected}"
             android:layout_marginRight="6dip"
             android:contentDescription="TODO" />
 

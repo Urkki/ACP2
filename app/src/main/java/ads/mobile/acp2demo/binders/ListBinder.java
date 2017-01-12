@@ -1,9 +1,11 @@
-package ads.mobile.acp2demo;
+package ads.mobile.acp2demo.binders;
 
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableArrayList;
-import android.widget.ImageView;
 import android.widget.ListView;
+
+import ads.mobile.acp2demo.classes.AppInfo;
+import ads.mobile.acp2demo.adapters.ListAdapter;
 
 public class ListBinder {
 
