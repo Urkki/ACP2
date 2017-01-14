@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -30,6 +31,8 @@ import ads.mobile.acp2demo.services.AppCheckerService;
 public class MainActivity extends AppCompatActivity {
 
     public AppsList apps;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +43,17 @@ public class MainActivity extends AppCompatActivity {
             apps = new AppsList(loadInstalledApps());
         }
 
-        //ask permissions for tracking foreground app.
-        if(!hasUsageStatsPermission(this.getBaseContext())) {
-            requestUsageStatsPermission();
-        }
+
+
         //Bind list to UI and attach listener
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        //ask permissions for tracking foreground app.
+        if(!hasUsageStatsPermission(this.getApplicationContext())) {
+            requestUsageStatsPermission();
+        }
+        //overLayPermission
+        requestOverLayPermission();
         binding.setApps(apps);
         ListView listView = (ListView) findViewById(R.id.appListView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 //                }
                 //notify service that list has changed...
                 Intent i = new Intent(AppCheckerService.SEND_LIST_CHANGED);
-                Log.d("MAIN_ACTIVITY", "Sending broadcast.");
+                Log.d(TAG, "Sending broadcast.");
                 sendBroadcast(i);
                 if (!success) {
                     Toast.makeText(getApplicationContext(),
@@ -81,7 +89,21 @@ public class MainActivity extends AppCompatActivity {
 //            ft.commit();
 //        }
     }
-
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (!Settings.canDrawOverlays(this)) {
+                // You don't have permission
+                requestOverLayPermission();
+            }
+            else
+            {
+                //do as per your logic
+            }
+        }
+    }
     private ArrayList<AppInfo> loadInstalledApps()
     {
         List<PackageInfo> packList = getPackageManager().getInstalledPackages(0);
@@ -96,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 //                Log.e("App № " + Integer.toString(i), appName);
                 AppInfo inf = new AppInfo(appName, packInfo);
                 infos.add(inf);
-//                AppListElementLayoutBinding binding = DataBindingUtil.setContentView(this, R.layout.app_list_element_layout);
+//                AppListElementLayoutBinding binding = DataBindingUtil.setContentView(this, R.layout.app_list_element);
 //                binding.setAppInfo(inf);
 
             }
@@ -119,5 +141,15 @@ public class MainActivity extends AppCompatActivity {
                 android.os.Process.myUid(), context.getPackageName());
         boolean granted = mode == AppOpsManager.MODE_ALLOWED;
         return granted;
+    }
+
+    public void requestOverLayPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            }
+        }
     }
 }

@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 
 import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.R;
-import ads.mobile.acp2demo.databinding.AppListElementLayoutBinding;
+import ads.mobile.acp2demo.databinding.AppListElementBinding;
 
 public class ListAdapter extends BaseAdapter {
 
@@ -43,36 +43,11 @@ public class ListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) parent.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-        AppListElementLayoutBinding binding =
-                DataBindingUtil.inflate(inflater, R.layout.app_list_element_layout, parent, false);
+        AppListElementBinding binding =
+                DataBindingUtil.inflate(inflater, R.layout.app_list_element, parent, false);
         binding.setAppInfo(list.get(position));
 
         return binding.getRoot();
-
-//        View v = convertView;
-//
-//        if (v == null) {
-//            LayoutInflater vi;
-//            vi = LayoutInflater.from(getContext());
-//            v = vi.inflate(R.layout.app_list_element_layout, null);
-//
-//        }
-//
-//        AppInfo p = getItem(position);
-//
-//        if (p != null) {
-//            TextView tt1 = (TextView) v.findViewById(R.id.appName);
-//            CheckBox cbx = (CheckBox) v.findViewById(R.id.cbx);
-////            if (tt1 != null) {
-////                tt1.setText(p.getAppName());
-////            }
-////            if (cbx != null) {
-////                cbx.setChecked(p.getIsUsed());
-////            }
-//
-//        }
-
-//        return v;
     }
 
 

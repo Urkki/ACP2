@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.view.WindowManager;
 
 import com.rvalerio.fgchecker.AppChecker;
 
@@ -29,10 +28,12 @@ public class AppCheckerService extends Service {
     private static final String TAG = AppCheckerService.class.getSimpleName();
     private final static String STOP_SERVICE = AppCheckerService.class.getPackage()+".stop";
     public final static String SEND_LIST_CHANGED = "listChanged";
-    private ArrayList<String> selctedApps;
+    public final static String AD_TERMINATED = "ad_is_terminated";
+    private ArrayList<String> selectedApps;
 
     private BroadcastReceiver stopServiceReceiver;
     private BroadcastReceiver listChangedReceiver;
+    private BroadcastReceiver adIsTerminatedReceiver;
 
     private AppChecker appChecker;
     private boolean adIsTriggered = false;
@@ -46,6 +47,12 @@ public class AppCheckerService extends Service {
         context.stopService(new Intent(context, AppCheckerService.class));
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -57,7 +64,8 @@ public class AppCheckerService extends Service {
         super.onCreate();
         registerReceivers();
         startChecker();
-        createStickyNotification();
+        Notification n = createStickyNotification();
+        startForeground(NOTIFICATION_ID, n);
     }
 
     @Override
@@ -66,6 +74,7 @@ public class AppCheckerService extends Service {
         stopChecker();
         removeNotification();
         unregisterReceivers();
+        removeAdView();
         stopSelf();
     }
 
@@ -75,31 +84,49 @@ public class AppCheckerService extends Service {
                 .other(new AppChecker.Listener() {
                     @Override
                     public void onForeground(String packageName) {
-                        if(appListIsChanged)
-                        {
-                            Log.d(TAG, "Fetching new list...");
-                            AppsList tmp = AppsList.load(getApplicationContext());
-                            selctedApps = tmp.getSelectedAppPackageNames();
-                            Log.d(TAG, "selctedApps: " + Arrays.toString(selctedApps.toArray()));
-                            Log.d(TAG, "Current Foreground app: " + packageName +  " isSelected: "
-                            + Boolean.toString(selctedApps.contains(packageName)) );
-                            appListIsChanged = false;
+                        //UI list has changed.
+                        if(appListIsChanged) {
+                            getUpdatedAppList(packageName);
+                        }
+                        if(selectedApps != null) {
+                            //Foreground app is selected and ad is not triggered before.
+                            if(selectedApps.contains(packageName) && !adIsTriggered) {
+                                Log.d(TAG, "ad is triggered.");
+                                adIsTriggered = true;
+                                showAdView();
+                            }
+                            //Foreground app is not selected and ad is triggered before.
+                            if(!selectedApps.contains(packageName) && adIsTriggered) {
+                                Log.d(TAG, "ad is removed.");
+                                adIsTriggered = false;
+                                removeAdView();
+                            }
                         }
 
-                        if(selctedApps.contains(packageName) && !adIsTriggered)
-                        {
-                            Log.d(TAG, "ad is triggered.");
-                            adIsTriggered = true;
-                            showAd();
-                        }
                     }
                 })
                 .timeout(5000)
                 .start(this);
     }
 
-    private void showAd()
-    {
+    private void getUpdatedAppList(String packageName){
+        Log.d(TAG, "Fetching new list...");
+        AppsList tmp = AppsList.load(getApplicationContext());
+        if(tmp != null){
+            selectedApps = tmp.getSelectedAppPackageNames();
+            Log.d(TAG, "selectedApps: " + Arrays.toString(selectedApps.toArray()));
+            Log.d(TAG, "Current Foreground app: " + packageName +  " isSelected: "
+                    + Boolean.toString(selectedApps.contains(packageName)) );
+            appListIsChanged = false;
+        }
+    }
+
+    public void showAdView(){
+        getBaseContext().startService(new Intent(getBaseContext(), AdViewService.class));
+    }
+
+    public void removeAdView() {
+        getBaseContext().stopService(new Intent(getBaseContext(), AdViewService.class));
     }
 
     private void stopChecker() {
@@ -110,28 +137,38 @@ public class AppCheckerService extends Service {
         stopServiceReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("APP_CHECKER_SERVICE", "is stopping.");
+                Log.d(TAG, "is stopping.");
+//                onDestroy();
                 stopSelf();
             }
         };
         listChangedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("LIST_CHANGED_RECEIVER", "LIST HAS CHANGED.");
+                Log.d(TAG, "LIST HAS CHANGED.");
                 appListIsChanged = true;
+            }
+        };
+        adIsTerminatedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "Ad is terminated.");
+                adIsTriggered = false;
             }
         };
         registerReceiver(stopServiceReceiver, new IntentFilter(STOP_SERVICE));
         registerReceiver(listChangedReceiver, new IntentFilter(SEND_LIST_CHANGED));
+        registerReceiver(adIsTerminatedReceiver, new IntentFilter(AD_TERMINATED));
     }
 
     private void unregisterReceivers() {
         unregisterReceiver(stopServiceReceiver);
         unregisterReceiver(listChangedReceiver);
+        unregisterReceiver(adIsTerminatedReceiver);
     }
 
     private Notification createStickyNotification() {
-        NotificationManager manager = ((NotificationManager) getSystemService(NOTIFICATION_SERVICE));
+//        NotificationManager manager = ((NotificationManager) getSystemService(NOTIFICATION_SERVICE));
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setOngoing(true)
@@ -142,7 +179,7 @@ public class AppCheckerService extends Service {
                 .setContentIntent(PendingIntent.getBroadcast(this, 0, new Intent(STOP_SERVICE), PendingIntent.FLAG_UPDATE_CURRENT))
                 .setWhen(0)
                 .build();
-        manager.notify(NOTIFICATION_ID, notification);
+//        manager.notify(NOTIFICATION_ID, notification);
         return notification;
     }
 

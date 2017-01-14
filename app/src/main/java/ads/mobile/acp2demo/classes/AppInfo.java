@@ -15,14 +15,12 @@ import java.io.Serializable;
 public class AppInfo extends BaseObservable implements Serializable {
     public String AppName;
     public String appPackageName;
-//    private PackageInfo mInfo;
     public Boolean IsSelected = false;
 
     public AppInfo(String appName, PackageInfo i)
     {
         this.AppName = appName;
         this.appPackageName = i.packageName;
-//        this.mInfo = i;
     }
 
 //    @Bindable

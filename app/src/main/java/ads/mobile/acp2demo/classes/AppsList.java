@@ -14,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ads.mobile.acp2demo.services.AppCheckerService;
+
 /**
  * Created by Urkki on 8.1.2017.
  */
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 public class AppsList implements Serializable {
 
     private static final String FILENAME = "saved_app_list.txt";
+    private static final String TAG = AppCheckerService.class.getSimpleName();
 
     public ObservableArrayList<AppInfo> appsList = new ObservableArrayList<>();
 
@@ -80,7 +83,7 @@ public class AppsList implements Serializable {
         String path = c.getFilesDir().getAbsolutePath();
         String[] asdf = c.fileList();
         if (!new File(path + "/" + FILENAME).exists()) {
-            Log.i("APP_FILE_NOT_FOUND", "Applist file at " + path + "/" + FILENAME + " not found.");
+            Log.i(TAG, "Applist file at " + path + "/" + FILENAME + " not found.");
             return null;
         }
 
@@ -103,7 +106,7 @@ public class AppsList implements Serializable {
         finally { //Remove corrupted file if necessary.
             if (failed) {
                 c.deleteFile(FILENAME);
-                Log.i("APP_FILE_CORRUPTED", "Applist file at " + path + "/" + FILENAME + " was corrupted and deleted.");
+                Log.i(TAG, "Applist file at " + path + "/" + FILENAME + " was corrupted and deleted.");
             }
         }
         return null;
