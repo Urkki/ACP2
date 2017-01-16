@@ -4,25 +4,30 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
+
+
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
 import ads.mobile.acp2demo.R;
+import ads.mobile.acp2demo.activities.AdDialogActivity;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
+
+import static android.R.attr.start;
 
 /**
  * FloatingViewのカスタマイズを行います。
@@ -71,17 +76,19 @@ public class AdViewService extends Service implements FloatingViewListener {
             @Override
             public void onClick(View v) {
                 // メールアプリの起動
-                final Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.mail_address), null));
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_title));
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_content));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                final Intent intent = new Intent(getApplicationContext(), AdDialogActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_NO_HISTORY |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                stopSelf();
             }
         });
 
         mFloatingViewManager = new FloatingViewManager(this, this);
         mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_trash_fixed);
         mFloatingViewManager.setActionTrashIconImage(R.drawable.ic_trash_action);
+        mFloatingViewManager.setTrashViewEnabled(false);
         // Setting Options(you can change options at any time)
         loadDynamicOptions();
         // Initial Setting Options (you can't change options after created.)
@@ -122,6 +129,7 @@ public class AdViewService extends Service implements FloatingViewListener {
         i.putExtra("reason", "dno");
         sendBroadcast(i);
         Log.d(TAG, "Ad STOP broadcast is sended.");
+        onDestroy();
         stopSelf();
     }
 

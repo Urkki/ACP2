@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
             apps = new AppsList(loadInstalledApps());
         }
 
-
-
         //Bind list to UI and attach listener
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -62,12 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 CheckBox cbx = (CheckBox) view.findViewById(R.id.cbx);
                 cbx.setChecked(!cbx.isChecked()); // invert checkbox
                 boolean success = apps.save(getApplicationContext());
-
-//                AppChecker appChecker = new AppChecker();
-//                String packageName = appChecker.getForegroundApp(getApplicationContext());
-//                if (packageName != null){
-//                    Log.i("packageName", packageName);
-//                }
                 //notify service that list has changed...
                 Intent i = new Intent(AppCheckerService.SEND_LIST_CHANGED);
                 Log.d(TAG, "Sending broadcast.");
@@ -82,12 +74,7 @@ public class MainActivity extends AppCompatActivity {
         });
         //Start service.
         AppCheckerService.start(getApplicationContext());
-        Toast.makeText(getBaseContext(), "Service started", Toast.LENGTH_LONG).show();
-//        if (savedInstanceState == null) {
-//            FragmentTransaction ft = getFragmentManager().beginTransaction();
-//            ft.add(R.id.activity_main, FloatingViewControlFragment.newInstance());
-//            ft.commit();
-//        }
+//        Toast.makeText(getBaseContext(), "Service started", Toast.LENGTH_LONG).show();
     }
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -112,17 +99,12 @@ public class MainActivity extends AppCompatActivity {
         {
             PackageInfo packInfo = packList.get(i);
             //Take only installed apps.
-            if ( (packInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0)
+//            if ( (packInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0)
             {
                 String appName = packInfo.applicationInfo.loadLabel(getPackageManager()).toString();
-//                Log.e("App № " + Integer.toString(i), appName);
                 AppInfo inf = new AppInfo(appName, packInfo);
                 infos.add(inf);
-//                AppListElementLayoutBinding binding = DataBindingUtil.setContentView(this, R.layout.app_list_element);
-//                binding.setAppInfo(inf);
-
             }
-
         }
         return infos;
     }

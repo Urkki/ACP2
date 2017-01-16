@@ -75,6 +75,7 @@ public class AppCheckerService extends Service {
         removeNotification();
         unregisterReceivers();
         removeAdView();
+        stopForeground(true);
         stopSelf();
     }
 
@@ -139,6 +140,7 @@ public class AppCheckerService extends Service {
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "is stopping.");
 //                onDestroy();
+                stopForeground(true);
                 stopSelf();
             }
         };
