@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
@@ -26,8 +25,6 @@ import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.activities.AdDialogActivity;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
-
-import static android.R.attr.start;
 
 /**
  * FloatingViewのカスタマイズを行います。
@@ -71,7 +68,7 @@ public class AdViewService extends Service implements FloatingViewListener {
         mCustomFloatingViewServiceBinder = new CustomFloatingViewServiceBinder(this);
         //TODO: This imgview should be inherited
         final LayoutInflater inflater = LayoutInflater.from(this);
-        final ImageView iconView = (ImageView) inflater.inflate(R.layout.widget_mail, null, false);
+        final ImageView iconView = (ImageView) inflater.inflate(R.layout.widget_ad, null, false);
         iconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
