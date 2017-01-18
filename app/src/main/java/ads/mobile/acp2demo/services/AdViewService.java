@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-
 
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -19,12 +19,18 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+
 import java.lang.ref.WeakReference;
 
 import ads.mobile.acp2demo.R;
+
+
 import ads.mobile.acp2demo.activities.AdDialogActivity;
+import ads.mobile.acp2demo.classes.AdFloatingViewManager;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
+
+
 
 /**
  * FloatingViewのカスタマイズを行います。
@@ -56,7 +62,7 @@ public class AdViewService extends Service implements FloatingViewListener {
      * {@inheritDoc}
      */
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, final int flags, int startId) {
         // 既にManagerが存在していたら何もしない
         if (mFloatingViewManager != null) {
             return START_STICKY;
@@ -66,10 +72,9 @@ public class AdViewService extends Service implements FloatingViewListener {
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         mCustomFloatingViewServiceBinder = new CustomFloatingViewServiceBinder(this);
-        //TODO: This imgview should be inherited
         final LayoutInflater inflater = LayoutInflater.from(this);
-        final ImageView iconView = (ImageView) inflater.inflate(R.layout.widget_ad, null, false);
-        iconView.setOnClickListener(new View.OnClickListener() {
+        ImageView adimageButton = (ImageView) inflater.inflate(R.layout.widget_ad, null, false);
+        adimageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // メールアプリの起動
@@ -82,19 +87,16 @@ public class AdViewService extends Service implements FloatingViewListener {
             }
         });
 
-        mFloatingViewManager = new FloatingViewManager(this, this);
+
+        mFloatingViewManager = new AdFloatingViewManager(this, this);
         mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_trash_fixed);
         mFloatingViewManager.setActionTrashIconImage(R.drawable.ic_trash_action);
-        mFloatingViewManager.setTrashViewEnabled(false);
+        mFloatingViewManager.setTrashViewEnabled(true);
         // Setting Options(you can change options at any time)
         loadDynamicOptions();
         // Initial Setting Options (you can't change options after created.)
         final FloatingViewManager.Options options = loadOptions(metrics);
-        mFloatingViewManager.addViewToWindow(iconView, options);
-
-        // 常駐起動
-//        startForeground(NOTIFICATION_ID, createNotification());
-
+        mFloatingViewManager.addViewToWindow(adimageButton, options);
         return START_REDELIVER_INTENT;
     }
 
