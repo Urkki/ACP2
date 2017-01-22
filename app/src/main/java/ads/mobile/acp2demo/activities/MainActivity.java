@@ -24,6 +24,7 @@ import java.util.List;
 import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.R;
+import ads.mobile.acp2demo.classes.UniqueIdManager;
 import ads.mobile.acp2demo.databinding.ActivityMainBinding;
 
 import ads.mobile.acp2demo.services.AppCheckerService;
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         if (apps == null) {
             apps = new AppsList(loadInstalledApps());
         }
-
+        //Generate or init uuid for db.
+        new UniqueIdManager(this);
         //Bind list to UI and attach listener
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
