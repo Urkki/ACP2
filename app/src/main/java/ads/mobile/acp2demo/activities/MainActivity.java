@@ -11,6 +11,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
@@ -23,19 +24,22 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.aware.Aware;
+import com.aware.Aware_Preferences;
+import com.aware.providers.Aware_Provider;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ads.mobile.acp2demo.aware_plugin.Plugin;
+import ads.mobile.acp2demo.Plugin;
 import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.databinding.ActivityMainBinding;
 import ads.mobile.acp2demo.services.AppCheckerService;
 
-import static ads.mobile.acp2demo.aware_plugin.Settings.STATUS_PLUGIN_AD_DEMO;
+import static ads.mobile.acp2demo.Plugin.NAME;
+import static ads.mobile.acp2demo.Settings.STATUS_PLUGIN_AD_DEMO;
 import static android.os.Build.VERSION_CODES.M;
 
 
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public AppsList apps;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
-
+    private Context _context = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
         Aware.DEBUG = true;
         //Initialise AWARE
-//        Intent aware = new Intent(this, Aware.class);
-//        startService(aware);
-
+        Intent aware = new Intent(this, Aware.class);
+        startService(aware);
+//        Aware.stopAWARE(_context);
         Aware.joinStudy(getApplicationContext(), getString(R.string.study_url));
-        Aware.startAWARE(this);
-        Aware.setSetting(this, STATUS_PLUGIN_AD_DEMO, true);
-        Aware.startPlugin(this, Plugin.NAME);
+        Aware.setSetting(getApplicationContext(), STATUS_PLUGIN_AD_DEMO, true);
+        Aware.startPlugin(this, NAME);
 
         //Bind list to UI and attach listener
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
@@ -106,6 +109,28 @@ public class MainActivity extends AppCompatActivity {
         //Start service.
         AppCheckerService.start(getApplicationContext());
 //        Toast.makeText(getBaseContext(), "Service started", Toast.LENGTH_LONG).show();
+
+//        _context = getApplicationContext();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Aware.joinStudy(getApplicationContext(), getString(R.string.study_url));
+//                Aware.setSetting(_context, STATUS_PLUGIN_AD_DEMO, true);
+//                Aware.setSetting(_context, Aware_Preferences.STATUS_ACCELEROMETER, false);
+//                Aware.setSetting(_context, Aware_Preferences.STATUS_BLUETOOTH, false);
+//                Aware.setSetting(_context, Aware_Preferences.STATUS_GRAVITY, false);
+//                Aware.setSetting(_context, Aware_Preferences.STATUS_MAGNETOMETER, false);
+//                Aware.setSetting(_context, Aware_Preferences.STATUS_LIGHT, false);
+//                Aware.setSetting(_context, Aware_Preferences.STATUS_PROXIMITY, false);
+//                Aware.setSetting(_context, Aware_Preferences.STATUS_BAROMETER, false);
+//                Aware.stopBluetooth(_context);
+//                Aware.stopAccelerometer(_context);
+//                Aware.stopGravity(_context);
+//                Aware.stopApplications(_context);
+//                Aware.stopAWARE(_context);
+//                Aware.startPlugin(_context, Plugin.NAME);
+//            }
+//        }, 500);
     }
     @TargetApi(M)
     @Override

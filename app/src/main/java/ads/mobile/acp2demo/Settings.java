@@ -1,4 +1,4 @@
-package ads.mobile.acp2demo.aware_plugin;
+package ads.mobile.acp2demo;
 
 /**
  * Created by Urkki on 24.1.2017.
@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 
 import com.aware.Aware;
 
+import ads.mobile.acp2demo.Plugin;
 import ads.mobile.acp2demo.R;
 
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {

@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
     }
     buildTypes {
         release {
@@ -28,7 +29,17 @@ repositories {
     }
     maven { url 'https://dl.bintray.com/rvalerio/maven' }
 }
+/**
 
+ * This makes it so that when compiling your package, Gradle always fetches the latest source from GitHub
+
+ */
+
+//configurations.all {
+//
+//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//
+//}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

@@ -1,4 +1,4 @@
-package ads.mobile.acp2demo.aware_plugin;
+package ads.mobile.acp2demo;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +10,6 @@ import com.aware.Aware_Preferences;
 import com.aware.ui.PermissionsHandler;
 import com.aware.utils.Aware_Plugin;
 
-import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.db.tables.EventEntry;
 import ads.mobile.acp2demo.db.tables.LocationEntry;
 
@@ -20,7 +19,7 @@ import ads.mobile.acp2demo.db.tables.LocationEntry;
 
 public class Plugin extends Aware_Plugin {
 
-    public final static String NAME = "com.aware.plugin.ads_demo";
+    public final static String NAME = "ads.mobile.acp2demo";
     @Override
     public void onCreate() {
         super.onCreate();

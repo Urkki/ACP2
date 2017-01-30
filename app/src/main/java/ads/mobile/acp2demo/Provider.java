@@ -1,4 +1,4 @@
-package ads.mobile.acp2demo.aware_plugin;
+package ads.mobile.acp2demo;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -31,11 +31,11 @@ public class Provider extends ContentProvider {
     /**
      * Authority of this content provider
      */
-    public static String AUTHORITY = "ads.mobile.acp2demo.provider.ad_data";
+    public static String AUTHORITY = Plugin.NAME + ".provider.ad_data";
     /**
      * ContentProvider database version. Increment every time you modify the database structure
      */
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
     /**
      * Database stored in storage as: plugin_example.db
      */
@@ -144,7 +144,9 @@ public class Provider extends ContentProvider {
                 case EVENT_ENTRY:
                     qb.setTables(DATABASE_TABLES[1]);
                     qb.setProjectionMap(tableMapEvent);
+                    break;
                 default:
+                    int match = sUriMatcher.match(uri);
                     throw new IllegalArgumentException("Unknown URI " + uri);
             }
             try {

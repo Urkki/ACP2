@@ -1,4 +1,4 @@
-package ads.mobile.acp2demo.aware_plugin;
+package ads.mobile.acp2demo;
 
 import android.content.Context;
 import android.view.LayoutInflater;

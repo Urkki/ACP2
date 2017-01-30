@@ -3,10 +3,9 @@ package ads.mobile.acp2demo.db.tables;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import ads.mobile.acp2demo.aware_plugin.Plugin;
+import ads.mobile.acp2demo.Plugin;
 
-import static ads.mobile.acp2demo.aware_plugin.Provider.AUTHORITY;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static ads.mobile.acp2demo.Provider.AUTHORITY;
 
 
 /**
@@ -46,14 +45,14 @@ public final class EventEntry implements BaseColumns {
     public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + Plugin.NAME + "." + TABLE_NAME; //TODO: RENAME
 
     //EventTable
-    public static final String TABLE_FIELDS = _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            DEVICE_ID + " TEXT, " +
-            TIMESTAMP + " TEXT, " +
-            COLUMN_NAME_DURATION + " INTEGER, " +
-            COLUMN_NAME_EVENT_NAME + " TEXT, " +
-            COLUMN_NAME_USER_NAME + " TEXT, " +
-            COLUMN_NAME_CURRENT_AD_NAME + " TEXT, " +
-            COLUMN_NAME_CURRENT_APP_NAME + " TEXT, " +
-            COLUMN_NAME_TEST_CASE_NAME + " TEXT ";
+    public static final String TABLE_FIELDS = _ID + " integer primary key autoincrement," +
+            DEVICE_ID + " text default 'unknown'," +
+            TIMESTAMP + " real default 0," +
+            COLUMN_NAME_DURATION + " integer default -1," +
+            COLUMN_NAME_EVENT_NAME + " text default 'unknown'," +
+            COLUMN_NAME_USER_NAME + " text default 'unknown'," +
+            COLUMN_NAME_CURRENT_AD_NAME + " text default 'unknown'," +
+            COLUMN_NAME_CURRENT_APP_NAME + " text default 'unknown'," +
+            COLUMN_NAME_TEST_CASE_NAME + " text default 'unknown'";
 
 }

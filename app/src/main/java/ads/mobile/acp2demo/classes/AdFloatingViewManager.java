@@ -79,7 +79,7 @@ public class AdFloatingViewManager extends FloatingViewManager {
         Long now = System.currentTimeMillis();
         cont.put(LocationEntry.COLUMN_NAME_USER_NAME, "asdf");
         cont.put(LocationEntry.DEVICE_ID, device_id);
-        cont.put(LocationEntry.TIMESTAMP, now.toString());
+        cont.put(LocationEntry.TIMESTAMP, now);
         cont.put(LocationEntry.COLUMN_NAME_ELEMENT_NAME, "element_name");
         cont.put(LocationEntry.COLUMN_NAME_ACTION, action);
         cont.put(LocationEntry.COLUMN_NAME_CURRENT_APP_NAME, "asdf");

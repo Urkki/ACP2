@@ -1,12 +1,11 @@
 package ads.mobile.acp2demo.db.tables;
 
-import android.content.ContentProvider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import ads.mobile.acp2demo.aware_plugin.Plugin;
+import ads.mobile.acp2demo.Plugin;
 
-import static ads.mobile.acp2demo.aware_plugin.Provider.AUTHORITY;
+import static ads.mobile.acp2demo.Provider.AUTHORITY;
 
 
 /**
@@ -47,15 +46,15 @@ public final class LocationEntry implements BaseColumns {
     public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + Plugin.NAME + "." + TABLE_NAME; //TODO: RENAME
 
     //LocationTable
-    public static final String TABLE_FIELDS = LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    LocationEntry.DEVICE_ID + " TEXT, " +
-    LocationEntry.TIMESTAMP + " TEXT, " +
-    LocationEntry.COLUMN_NAME_ELEMENT_NAME + " TEXT, " +
-    LocationEntry.COLUMN_NAME_ACTION + " TEXT, " +
-    LocationEntry.COLUMN_NAME_USER_NAME + " TEXT, " +
-    LocationEntry.COLUMN_NAME_CURRENT_APP_NAME + " TEXT, " +
-    LocationEntry.COLUMN_NAME_TEST_CASE_NAME + " TEXT, " +
-    LocationEntry.COLUMN_NAME_X + " INTEGER, " +
-    LocationEntry.COLUMN_NAME_Y + " INTEGER ";
+    public static final String TABLE_FIELDS = LocationEntry._ID + " integer primary key autoincrement," +
+    LocationEntry.DEVICE_ID + " text default 'unknown'," +
+    LocationEntry.TIMESTAMP + " real default 0," +
+    LocationEntry.COLUMN_NAME_ELEMENT_NAME + " text default 'unknown'," +
+    LocationEntry.COLUMN_NAME_ACTION + " text default 'unknown'," +
+    LocationEntry.COLUMN_NAME_USER_NAME + " text default 'unknown'," +
+    LocationEntry.COLUMN_NAME_CURRENT_APP_NAME + " text default 'unknown'," +
+    LocationEntry.COLUMN_NAME_TEST_CASE_NAME + " text default 'unknown'," +
+    LocationEntry.COLUMN_NAME_X + " integer default -1," +
+    LocationEntry.COLUMN_NAME_Y + " integer default -1";
 
 }
