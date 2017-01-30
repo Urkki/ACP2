@@ -1,15 +1,19 @@
 package ads.mobile.acp2demo.activities;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,16 +22,22 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.aware.Aware;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
+import ads.mobile.acp2demo.aware_plugin.Plugin;
 import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.R;
-import ads.mobile.acp2demo.classes.UniqueIdManager;
 import ads.mobile.acp2demo.databinding.ActivityMainBinding;
-
 import ads.mobile.acp2demo.services.AppCheckerService;
+
+import static ads.mobile.acp2demo.aware_plugin.Settings.STATUS_PLUGIN_AD_DEMO;
+import static android.os.Build.VERSION_CODES.M;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,8 +53,27 @@ public class MainActivity extends AppCompatActivity {
         if (apps == null) {
             apps = new AppsList(loadInstalledApps());
         }
-        //Generate or init uuid for db.
-        new UniqueIdManager(this);
+
+        // The request code used in ActivityCompat.requestPermissions()
+        // and returned in the Activity's onRequestPermissionsResult()
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.WAKE_LOCK, Manifest.permission.READ_PHONE_STATE
+              };
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
+
+        Aware.DEBUG = true;
+        //Initialise AWARE
+//        Intent aware = new Intent(this, Aware.class);
+//        startService(aware);
+
+        Aware.joinStudy(getApplicationContext(), getString(R.string.study_url));
+        Aware.startAWARE(this);
+        Aware.setSetting(this, STATUS_PLUGIN_AD_DEMO, true);
+        Aware.startPlugin(this, Plugin.NAME);
+
         //Bind list to UI and attach listener
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -78,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         AppCheckerService.start(getApplicationContext());
 //        Toast.makeText(getBaseContext(), "Service started", Toast.LENGTH_LONG).show();
     }
-    @TargetApi(Build.VERSION_CODES.M)
+    @TargetApi(M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -128,12 +157,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestOverLayPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= M) {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
             }
         }
+    }
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
