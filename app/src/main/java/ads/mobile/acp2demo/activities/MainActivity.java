@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
 
+
+
         Aware.DEBUG = true;
         //Initialise AWARE
         Intent aware = new Intent(this, Aware.class);

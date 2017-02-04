@@ -13,8 +13,7 @@ import android.preference.PreferenceManager;
 
 import com.aware.Aware;
 
-import ads.mobile.acp2demo.Plugin;
-import ads.mobile.acp2demo.R;
+
 
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 

@@ -10,17 +10,15 @@ import android.view.View;
 
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
-import com.aware.providers.Aware_Provider;
+
 
 import java.util.ArrayList;
-import java.util.List;
 
-import ads.mobile.acp2demo.db.tables.LocationEntry;
+
+import ads.mobile.acp2demo.Provider;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
-import static android.R.attr.x;
-import static android.R.attr.y;
 import static android.content.ContentValues.TAG;
 
 /**
@@ -66,7 +64,7 @@ public class AdFloatingViewManager extends FloatingViewManager {
                 cache.add(createContentValue("UP", x, y));
                 //insert data to db.
                 ContentValues[] tmp = cache.toArray(new ContentValues[cache.size()]);
-                c.getContentResolver().bulkInsert(LocationEntry.CONTENT_URI, tmp);
+                c.getContentResolver().bulkInsert(Provider.LocationEntry.CONTENT_URI, tmp);
                 break;
         }
 
@@ -77,15 +75,15 @@ public class AdFloatingViewManager extends FloatingViewManager {
     private ContentValues createContentValue( String action, int x, int y  ) {
         ContentValues cont = new ContentValues();
         Long now = System.currentTimeMillis();
-        cont.put(LocationEntry.COLUMN_NAME_USER_NAME, "asdf");
-        cont.put(LocationEntry.DEVICE_ID, device_id);
-        cont.put(LocationEntry.TIMESTAMP, now);
-        cont.put(LocationEntry.COLUMN_NAME_ELEMENT_NAME, "element_name");
-        cont.put(LocationEntry.COLUMN_NAME_ACTION, action);
-        cont.put(LocationEntry.COLUMN_NAME_CURRENT_APP_NAME, "asdf");
-        cont.put(LocationEntry.COLUMN_NAME_TEST_CASE_NAME, "asdf");
-        cont.put(LocationEntry.COLUMN_NAME_X, x);
-        cont.put(LocationEntry.COLUMN_NAME_Y, y);
+        cont.put(Provider.LocationEntry.COLUMN_NAME_USER_NAME, "asdf");
+        cont.put(Provider.LocationEntry.DEVICE_ID, device_id);
+        cont.put(Provider.LocationEntry.TIMESTAMP, now);
+        cont.put(Provider.LocationEntry.COLUMN_NAME_ELEMENT_NAME, "element_name");
+        cont.put(Provider.LocationEntry.COLUMN_NAME_ACTION, action);
+        cont.put(Provider.LocationEntry.COLUMN_NAME_CURRENT_APP_NAME, "asdf");
+        cont.put(Provider.LocationEntry.COLUMN_NAME_TEST_CASE_NAME, "asdf");
+        cont.put(Provider.LocationEntry.COLUMN_NAME_X, x);
+        cont.put(Provider.LocationEntry.COLUMN_NAME_Y, y);
         return cont;
     }
 }

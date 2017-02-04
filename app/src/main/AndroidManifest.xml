@@ -31,9 +31,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".Plugin"
+        <service android:name="ads.mobile.acp2demo.Plugin"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:label="AWARE: Plugin Template"
+            />
         <service
             android:name=".services.AdViewService"
             android:enabled="true"

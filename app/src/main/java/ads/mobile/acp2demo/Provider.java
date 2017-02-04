@@ -1,62 +1,142 @@
 package ads.mobile.acp2demo;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.aware.Aware;
 import com.aware.utils.DatabaseHelper;
 
-import java.io.File;
 import java.util.HashMap;
 
-import ads.mobile.acp2demo.db.tables.EventEntry;
-import ads.mobile.acp2demo.db.tables.LocationEntry;
 
 /**
  * Created by Urkki on 23.1.2017.
  */
 
 public class Provider extends ContentProvider {
-    private static String TAG = Provider.class.getSimpleName();
-    /**
-     * Authority of this content provider
-     */
-    public static String AUTHORITY = Plugin.NAME + ".provider.ad_data";
+    public static String AUTHORITY = "ads.mobile.acp2demo.provider.ad_data";
     /**
      * ContentProvider database version. Increment every time you modify the database structure
      */
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     /**
      * Database stored in storage as: plugin_example.db
      */
     public static final String DATABASE_NAME = "plugin_ad_data.db";
+
+    public static final String DB_LOCATION_TABLE_NAME = "locations";
+    public static final String DB_EVENT_TABLE_NAME = "events";
+
+    public static final String[] DATABASE_TABLES = {
+            DB_LOCATION_TABLE_NAME,
+            DB_EVENT_TABLE_NAME };
+
+	private static String TAG = Provider.class.getSimpleName();
     //ContentProvider query indexes
     private static final int LOCATION_ENTRY = 1;
     private static final int LOCATION_ENTRY_ID = 2;
     private static final int EVENT_ENTRY = 3;
     private static final int EVENT_ENTRY_ID = 4;
-    /**
-     * Database tables:<br/>
-     * - plugin_example
-     */
-    public static final String[] DATABASE_TABLES = {LocationEntry.TABLE_NAME,
-            EventEntry.TABLE_NAME};
 
-    public static final String[] TABLES_FIELDS = {LocationEntry.TABLE_FIELDS,
-            EventEntry.TABLE_FIELDS };
 
-    public Provider() {
+
+    //These are columns that we need to sync data, don't change this!
+    public interface AWAREColumns extends BaseColumns {
+        String _ID = "_id";
+        String TIMESTAMP = "timestamp";
+        String DEVICE_ID = "device_id";
     }
+
+    public static final class LocationEntry implements AWAREColumns {
+
+        /**
+         * Your ContentProvider table content URI.<br/>
+         * The last segment needs to match your database table name
+         */
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + DB_LOCATION_TABLE_NAME);
+        /**
+         * How your data collection is identified internally in Android (vnd.android.cursor.dir). <br/>
+         * It needs to be /vnd.aware.plugin.XXX where XXX is your plugin name (no spaces!).
+         */
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + Plugin.NAME + "." + DB_LOCATION_TABLE_NAME; //TODO: RENAME
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + Plugin.NAME + "." + DB_LOCATION_TABLE_NAME; //TODO: RENAME
+
+        //Our columns
+        public static final String COLUMN_NAME_ELEMENT_NAME = "element";
+        public static final String COLUMN_NAME_USER_NAME = "user_name";
+        public static final String COLUMN_NAME_CURRENT_APP_NAME = "current_app_name";
+        public static final String COLUMN_NAME_TEST_CASE_NAME= "test_case_name";
+        public static final String COLUMN_NAME_ACTION = "action";
+        public static final String COLUMN_NAME_X = "x";
+        public static final String COLUMN_NAME_Y = "y";
+
+    }
+    //LocationTable
+    public static final String DB_LOCATION_TABLE_NAME_FIELDS =
+            LocationEntry._ID + " integer primary key autoincrement," +
+            LocationEntry.TIMESTAMP + " real default 0," +
+            LocationEntry.DEVICE_ID + " text default ''," +
+            LocationEntry.COLUMN_NAME_ELEMENT_NAME + " text default ''," +
+            LocationEntry.COLUMN_NAME_ACTION + " text default ''," +
+            LocationEntry.COLUMN_NAME_USER_NAME + " text default ''," +
+            LocationEntry.COLUMN_NAME_CURRENT_APP_NAME + " text default ''," +
+            LocationEntry.COLUMN_NAME_TEST_CASE_NAME + " text default ''," +
+            LocationEntry.COLUMN_NAME_X + " integer default -1," +
+            LocationEntry.COLUMN_NAME_Y + " integer default -1,";
+
+    public static final class EventEntry implements AWAREColumns {
+        /**
+         * Your ContentProvider table content URI.<br/>
+         * The last segment needs to match your database table name
+         */
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + DB_EVENT_TABLE_NAME);
+        /**
+         * How your data collection is identified internally in Android (vnd.android.cursor.dir). <br/>
+         * It needs to be /vnd.aware.plugin.XXX where XXX is your plugin name (no spaces!).
+         */
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + Plugin.NAME + "." + DB_EVENT_TABLE_NAME; //TODO: RENAME
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + Plugin.NAME + "." + DB_EVENT_TABLE_NAME; //TODO: RENAME
+
+        //Our columns
+        public static final String COLUMN_NAME_DURATION = "duration";
+        public static final String COLUMN_NAME_EVENT_NAME = "event_name";
+        public static final String COLUMN_NAME_USER_NAME = "user_name";
+        public static final String COLUMN_NAME_CURRENT_AD_NAME = "current_ad_name";
+        public static final String COLUMN_NAME_CURRENT_APP_NAME = "current_app_name";
+        public static final String COLUMN_NAME_TEST_CASE_NAME= "test_case_name";
+
+
+
+
+
+    }
+    //EventTable
+    public static final String DB_EVENT_TABLE_NAME_FIELDS =
+            EventEntry._ID + " integer primary key autoincrement," +
+            EventEntry.TIMESTAMP + " real default 0," +
+            EventEntry.DEVICE_ID + " text default ''," +
+            EventEntry.COLUMN_NAME_DURATION + " integer default -1," +
+            EventEntry.COLUMN_NAME_EVENT_NAME + " text default ''," +
+            EventEntry.COLUMN_NAME_USER_NAME + " text default ''," +
+            EventEntry.COLUMN_NAME_CURRENT_AD_NAME + " text default ''," +
+            EventEntry.COLUMN_NAME_CURRENT_APP_NAME + " text default ''," +
+            EventEntry.COLUMN_NAME_TEST_CASE_NAME + " text default '',";
+
+
+    public static final String[] TABLES_FIELDS = {DB_LOCATION_TABLE_NAME_FIELDS,
+            DB_EVENT_TABLE_NAME_FIELDS };
+
 
     private static UriMatcher sUriMatcher = null;
     private static HashMap<String, String> tableMapLocation = null;
@@ -79,20 +159,22 @@ public class Provider extends ContentProvider {
     /**
      * Allow resetting the ContentProvider when updating/reinstalling AWARE
      */
-    public static void resetDB( Context c ) {
-        Log.d("AWARE", "Resetting " + DATABASE_NAME + "...");
-
-        File db = new File(DATABASE_NAME);
-        db.delete();
-        databaseHelper = new DatabaseHelper( c, DATABASE_NAME, null, DATABASE_VERSION, DATABASE_TABLES, TABLES_FIELDS);
-        if( databaseHelper != null ) {
-            database = databaseHelper.getWritableDatabase();
-        }
-    }
+//    public static void resetDB( Context c ) {
+//        Log.d("AWARE", "Resetting " + DATABASE_NAME + "...");
+//
+//        File db = new File(DATABASE_NAME);
+//        db.delete();
+//        databaseHelper = new DatabaseHelper( c, DATABASE_NAME, null, DATABASE_VERSION, DATABASE_TABLES, TABLES_FIELDS);
+//        if( databaseHelper != null ) {
+//            database = databaseHelper.getWritableDatabase();
+//        }
+//    }
 
     @Override
     public boolean onCreate() {
+        //This is a hack to allow providers to be reusable in any application/plugin by making the authority dynamic using the package name of the parent app
         AUTHORITY = getContext().getPackageName() + ".provider.ad_data"; //make AUTHORITY dynamic
+        Log.i("AUTHORITY", "auth: " + AUTHORITY);
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         //location
         sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[0], LOCATION_ENTRY); //URI for all records
