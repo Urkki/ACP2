@@ -36,6 +36,7 @@ import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.databinding.ActivityMainBinding;
+import ads.mobile.acp2demo.db.DbManager;
 import ads.mobile.acp2demo.services.AppCheckerService;
 
 import static ads.mobile.acp2demo.Plugin.NAME;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //Get installed apps
         apps = AppsList.load(getApplicationContext());
         if (apps == null) {
@@ -74,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         //Initialise AWARE
         Intent aware = new Intent(this, Aware.class);
         startService(aware);
-//        Aware.stopAWARE(_context);
         Aware.joinStudy(getApplicationContext(), getString(R.string.study_url));
         Aware.setSetting(getApplicationContext(), STATUS_PLUGIN_AD_DEMO, true);
         Aware.startPlugin(this, NAME);
@@ -110,29 +111,13 @@ public class MainActivity extends AppCompatActivity {
         });
         //Start service.
         AppCheckerService.start(getApplicationContext());
-//        Toast.makeText(getBaseContext(), "Service started", Toast.LENGTH_LONG).show();
-
-//        _context = getApplicationContext();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Aware.joinStudy(getApplicationContext(), getString(R.string.study_url));
-//                Aware.setSetting(_context, STATUS_PLUGIN_AD_DEMO, true);
-//                Aware.setSetting(_context, Aware_Preferences.STATUS_ACCELEROMETER, false);
-//                Aware.setSetting(_context, Aware_Preferences.STATUS_BLUETOOTH, false);
-//                Aware.setSetting(_context, Aware_Preferences.STATUS_GRAVITY, false);
-//                Aware.setSetting(_context, Aware_Preferences.STATUS_MAGNETOMETER, false);
-//                Aware.setSetting(_context, Aware_Preferences.STATUS_LIGHT, false);
-//                Aware.setSetting(_context, Aware_Preferences.STATUS_PROXIMITY, false);
-//                Aware.setSetting(_context, Aware_Preferences.STATUS_BAROMETER, false);
-//                Aware.stopBluetooth(_context);
-//                Aware.stopAccelerometer(_context);
-//                Aware.stopGravity(_context);
-//                Aware.stopApplications(_context);
-//                Aware.stopAWARE(_context);
-//                Aware.startPlugin(_context, Plugin.NAME);
-//            }
-//        }, 500);
+        final Context tmpe = getApplicationContext();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DbManager.insertDeviceInfoRow(tmpe, "asdfa2455");
+            }
+        }, 1000);
     }
     @TargetApi(M)
     @Override

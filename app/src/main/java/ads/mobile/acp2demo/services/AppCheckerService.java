@@ -39,6 +39,8 @@ public class AppCheckerService extends Service {
     private boolean adIsTriggered = false;
     private boolean appListIsChanged = true;
 
+    private static long adTriggerTime = 0;
+
     public static void start(Context context) {
         context.startService(new Intent(context, AppCheckerService.class));
     }
@@ -124,10 +126,16 @@ public class AppCheckerService extends Service {
 
     public void showAdView(){
         getBaseContext().startService(new Intent(getBaseContext(), AdViewService.class));
+        //Get current time
+        adTriggerTime = System.currentTimeMillis();
     }
 
     public void removeAdView() {
         getBaseContext().stopService(new Intent(getBaseContext(), AdViewService.class));
+    }
+
+    public static long getAdTriggerTime() {
+        return adTriggerTime;
     }
 
     private void stopChecker() {

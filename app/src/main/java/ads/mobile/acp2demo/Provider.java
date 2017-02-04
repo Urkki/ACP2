@@ -29,7 +29,7 @@ public class Provider extends ContentProvider {
     /**
      * ContentProvider database version. Increment every time you modify the database structure
      */
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     /**
      * Database stored in storage as: plugin_example.db
      */
@@ -37,10 +37,12 @@ public class Provider extends ContentProvider {
 
     public static final String DB_LOCATION_TABLE_NAME = "locations";
     public static final String DB_EVENT_TABLE_NAME = "events";
+    public static final String DB_DEVICE_INFO_TABLE_NAME = "device_info";
 
     public static final String[] DATABASE_TABLES = {
             DB_LOCATION_TABLE_NAME,
-            DB_EVENT_TABLE_NAME };
+            DB_EVENT_TABLE_NAME,
+            DB_DEVICE_INFO_TABLE_NAME};
 
 	private static String TAG = Provider.class.getSimpleName();
     //ContentProvider query indexes
@@ -48,6 +50,8 @@ public class Provider extends ContentProvider {
     private static final int LOCATION_ENTRY_ID = 2;
     private static final int EVENT_ENTRY = 3;
     private static final int EVENT_ENTRY_ID = 4;
+    private static final int DEVICE_ENTRY = 5;
+    private static final int DEVICE_ENTRY_ID = 6;
 
 
 
@@ -82,18 +86,49 @@ public class Provider extends ContentProvider {
         public static final String COLUMN_NAME_Y = "y";
 
     }
+
     //LocationTable
     public static final String DB_LOCATION_TABLE_NAME_FIELDS =
             LocationEntry._ID + " integer primary key autoincrement," +
-            LocationEntry.TIMESTAMP + " real default 0," +
-            LocationEntry.DEVICE_ID + " text default ''," +
-            LocationEntry.COLUMN_NAME_ELEMENT_NAME + " text default ''," +
-            LocationEntry.COLUMN_NAME_ACTION + " text default ''," +
-            LocationEntry.COLUMN_NAME_USER_NAME + " text default ''," +
-            LocationEntry.COLUMN_NAME_CURRENT_APP_NAME + " text default ''," +
-            LocationEntry.COLUMN_NAME_TEST_CASE_NAME + " text default ''," +
-            LocationEntry.COLUMN_NAME_X + " integer default -1," +
-            LocationEntry.COLUMN_NAME_Y + " integer default -1,";
+                    LocationEntry.TIMESTAMP + " real default 0," +
+                    LocationEntry.DEVICE_ID + " text default ''," +
+                    LocationEntry.COLUMN_NAME_ELEMENT_NAME + " text default ''," +
+                    LocationEntry.COLUMN_NAME_ACTION + " text default ''," +
+                    LocationEntry.COLUMN_NAME_USER_NAME + " text default ''," +
+                    LocationEntry.COLUMN_NAME_CURRENT_APP_NAME + " text default ''," +
+                    LocationEntry.COLUMN_NAME_TEST_CASE_NAME + " text default ''," +
+                    LocationEntry.COLUMN_NAME_X + " integer default -1," +
+                    LocationEntry.COLUMN_NAME_Y + " integer default -1";
+
+    public static final class DeviceInfoEntity implements AWAREColumns {
+
+        /**
+         * Your ContentProvider table content URI.<br/>
+         * The last segment needs to match your database table name
+         */
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + DB_DEVICE_INFO_TABLE_NAME);
+        /**
+         * How your data collection is identified internally in Android (vnd.android.cursor.dir). <br/>
+         * It needs to be /vnd.aware.plugin.XXX where XXX is your plugin name (no spaces!).
+         */
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + Plugin.NAME + "." + DB_DEVICE_INFO_TABLE_NAME; //TODO: RENAME
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + Plugin.NAME + "." + DB_DEVICE_INFO_TABLE_NAME; //TODO: RENAME
+
+        //Our columns
+        public static final String COLUMN_NAME_USER_NAME = "user_name";
+        public static final String COLUMN_NAME_SCREEN_WIDTH = "screen_width";
+        public static final String COLUMN_NAME_SCREEN_HEIGHT = "screen_height";
+
+    }
+    //DeviceInfoTABLE
+    public static final String DB_DEVICE_INFO_TABLE_NAME_FIELDS =
+                    DeviceInfoEntity._ID + " integer primary key autoincrement," +
+                    DeviceInfoEntity.TIMESTAMP + " real default 0," +
+                    DeviceInfoEntity.DEVICE_ID + " text default ''," +
+                    DeviceInfoEntity.COLUMN_NAME_USER_NAME + " text default ''," +
+                    DeviceInfoEntity.COLUMN_NAME_SCREEN_WIDTH + " integer default -1," +
+                    DeviceInfoEntity.COLUMN_NAME_SCREEN_HEIGHT + " integer default -1";
+
 
     public static final class EventEntry implements AWAREColumns {
         /**
@@ -115,32 +150,32 @@ public class Provider extends ContentProvider {
         public static final String COLUMN_NAME_CURRENT_AD_NAME = "current_ad_name";
         public static final String COLUMN_NAME_CURRENT_APP_NAME = "current_app_name";
         public static final String COLUMN_NAME_TEST_CASE_NAME= "test_case_name";
-
-
-
-
-
     }
+
     //EventTable
     public static final String DB_EVENT_TABLE_NAME_FIELDS =
             EventEntry._ID + " integer primary key autoincrement," +
             EventEntry.TIMESTAMP + " real default 0," +
             EventEntry.DEVICE_ID + " text default ''," +
-            EventEntry.COLUMN_NAME_DURATION + " integer default -1," +
+            EventEntry.COLUMN_NAME_DURATION + " real default -1," +
             EventEntry.COLUMN_NAME_EVENT_NAME + " text default ''," +
             EventEntry.COLUMN_NAME_USER_NAME + " text default ''," +
             EventEntry.COLUMN_NAME_CURRENT_AD_NAME + " text default ''," +
             EventEntry.COLUMN_NAME_CURRENT_APP_NAME + " text default ''," +
-            EventEntry.COLUMN_NAME_TEST_CASE_NAME + " text default '',";
+            EventEntry.COLUMN_NAME_TEST_CASE_NAME + " text default ''";
 
 
-    public static final String[] TABLES_FIELDS = {DB_LOCATION_TABLE_NAME_FIELDS,
-            DB_EVENT_TABLE_NAME_FIELDS };
+    public static final String[] TABLES_FIELDS = {
+            DB_LOCATION_TABLE_NAME_FIELDS,
+            DB_EVENT_TABLE_NAME_FIELDS,
+            DB_DEVICE_INFO_TABLE_NAME_FIELDS
+    };
 
 
     private static UriMatcher sUriMatcher = null;
     private static HashMap<String, String> tableMapLocation = null;
     private static HashMap<String, String> tableMapEvent = null;
+    private static HashMap<String, String> tableMapDevice = null;
     private static DatabaseHelper databaseHelper = null;
     private static SQLiteDatabase database = null;
 
@@ -182,6 +217,9 @@ public class Provider extends ContentProvider {
         //event
         sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[1], EVENT_ENTRY); //URI for all records
         sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[1]+"/#", EVENT_ENTRY_ID); //URI for a single record
+        //device
+        sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[2], DEVICE_ENTRY); //URI for all records
+        sUriMatcher.addURI(AUTHORITY, DATABASE_TABLES[2]+"/#", DEVICE_ENTRY_ID); //URI for a single record
 
         tableMapLocation = new HashMap<String, String>();
         tableMapLocation.put(LocationEntry._ID, LocationEntry._ID);
@@ -206,6 +244,14 @@ public class Provider extends ContentProvider {
         tableMapEvent.put(EventEntry.COLUMN_NAME_CURRENT_APP_NAME, EventEntry.COLUMN_NAME_CURRENT_APP_NAME);
         tableMapEvent.put(EventEntry.COLUMN_NAME_TEST_CASE_NAME, EventEntry.COLUMN_NAME_TEST_CASE_NAME);
 
+        tableMapDevice = new HashMap<String, String>();
+        tableMapDevice.put(DeviceInfoEntity._ID, DeviceInfoEntity._ID);
+        tableMapDevice.put(DeviceInfoEntity.TIMESTAMP, DeviceInfoEntity.TIMESTAMP);
+        tableMapDevice.put(DeviceInfoEntity.DEVICE_ID, DeviceInfoEntity.DEVICE_ID);
+        tableMapDevice.put(DeviceInfoEntity.COLUMN_NAME_USER_NAME, DeviceInfoEntity.COLUMN_NAME_USER_NAME);
+        tableMapDevice.put(DeviceInfoEntity.COLUMN_NAME_SCREEN_WIDTH, DeviceInfoEntity.COLUMN_NAME_SCREEN_WIDTH);
+        tableMapDevice.put(DeviceInfoEntity.COLUMN_NAME_SCREEN_HEIGHT, DeviceInfoEntity.COLUMN_NAME_SCREEN_HEIGHT);
+
         return true; //let Android know that the database is ready to be used.
     }
 
@@ -226,6 +272,10 @@ public class Provider extends ContentProvider {
                 case EVENT_ENTRY:
                     qb.setTables(DATABASE_TABLES[1]);
                     qb.setProjectionMap(tableMapEvent);
+                    break;
+                case DEVICE_ENTRY:
+                    qb.setTables(DATABASE_TABLES[2]);
+                    qb.setProjectionMap(tableMapDevice);
                     break;
                 default:
                     int match = sUriMatcher.match(uri);
@@ -253,6 +303,10 @@ public class Provider extends ContentProvider {
                 return EventEntry.CONTENT_TYPE;
             case EVENT_ENTRY_ID:
                 return EventEntry.CONTENT_ITEM_TYPE;
+            case DEVICE_ENTRY:
+                return DeviceInfoEntity.CONTENT_TYPE;
+            case DEVICE_ENTRY_ID:
+                return DeviceInfoEntity.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -285,6 +339,14 @@ public class Provider extends ContentProvider {
                     return dataUri;
                 }
                 throw new SQLException("Failed to insert row into " + uri);
+            case DEVICE_ENTRY:
+                _id = database.insert(DATABASE_TABLES[2],DeviceInfoEntity.DEVICE_ID, values);
+                if (_id > 0) {
+                    Uri dataUri = ContentUris.withAppendedId(DeviceInfoEntity.CONTENT_URI, _id);
+                    getContext().getContentResolver().notifyChange(dataUri, null);
+                    return dataUri;
+                }
+                throw new SQLException("Failed to insert row into " + uri);
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -304,6 +366,9 @@ public class Provider extends ContentProvider {
                 break;
             case EVENT_ENTRY:
                 count = database.delete(DATABASE_TABLES[1], selection,selectionArgs);
+                break;
+            case DEVICE_ENTRY:
+                count = database.delete(DATABASE_TABLES[2], selection,selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -327,6 +392,9 @@ public class Provider extends ContentProvider {
             case EVENT_ENTRY:
                 count = database.update(DATABASE_TABLES[1], values, selection, selectionArgs);
                 break;
+            case DEVICE_ENTRY:
+                count = database.update(DATABASE_TABLES[2], values, selection, selectionArgs);
+                break;
             default:
                 database.close();
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -334,21 +402,4 @@ public class Provider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
-
-//    public void insertImageData(Context c, String element_name, String action, String app_name,
-//                                String test_case_name, String user_name, int x, int y) {
-//        ContentValues new_data = new ContentValues();
-//        new_data.put(LocationEntry.DEVICE_ID, Aware.getSetting(c, Aware_Preferences.DEVICE_ID));
-//        new_data.put(LocationEntry.TIMESTAMP, System.currentTimeMillis());
-//        new_data.put(LocationEntry.COLUMN_NAME_ELEMENT_NAME, element_name);
-//        new_data.put(LocationEntry.COLUMN_NAME_ACTION, action);
-//        new_data.put(LocationEntry.COLUMN_NAME_CURRENT_APP_NAME, app_name);
-//        new_data.put(LocationEntry.COLUMN_NAME_TEST_CASE_NAME, test_case_name);
-//        new_data.put(LocationEntry.COLUMN_NAME_USER_NAME, user_name);
-//        new_data.put(LocationEntry.COLUMN_NAME_X, x);
-//        new_data.put(LocationEntry.COLUMN_NAME_Y, y);
-//        //        Insert the data to the ContentProvider
-//        c.getContentResolver().insert(LocationEntry.CONTENT_URI, new_data);
-//    }
-
 }
