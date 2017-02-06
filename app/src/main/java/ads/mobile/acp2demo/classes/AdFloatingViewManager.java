@@ -3,6 +3,8 @@ package ads.mobile.acp2demo.classes;
 import android.content.ContentValues;
 import android.content.Context;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,31 +17,39 @@ import com.aware.Aware_Preferences;
 import java.util.ArrayList;
 
 
-import ads.mobile.acp2demo.Provider;
 import ads.mobile.acp2demo.db.DbManager;
 import ads.mobile.acp2demo.services.AdViewService;
 import ads.mobile.acp2demo.services.AppCheckerService;
+
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
+import static ads.mobile.acp2demo.Provider.EventEntry.AD_DELETED_BY_USER;
+import static ads.mobile.acp2demo.Provider.EventEntry.AD_TOUCHED;
+import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
+import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.USER_NAME_PREF;
 import static ads.mobile.acp2demo.db.DbManager.createLocationContentValue;
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Urkki on 18.1.2017.
  */
 
 public class AdFloatingViewManager extends FloatingViewManager {
+    private String TAG = AdFloatingViewManager.class.getSimpleName();
     private long prevTime = 0;
     private static long HALF_SEC_IN_MILLIS = 500;
     private Context c;
     private AdViewService _adService;
-    ArrayList<ContentValues> cache = new ArrayList<>(10);
+    ArrayList<ContentValues> cache = new ArrayList<>(15);
+    private static SharedPreferences pref;
     private String device_id;
     public AdFloatingViewManager(Context context, FloatingViewListener listener) {
         super(context, listener);
         c = context;
         device_id = Aware.getSetting(c, Aware_Preferences.DEVICE_ID);
+        pref = PreferenceManager.getDefaultSharedPreferences(c);
     }
 
     @Override
@@ -54,7 +64,11 @@ public class AdFloatingViewManager extends FloatingViewManager {
                 long now = System.currentTimeMillis();
                 long adShowTime = AppCheckerService.getAdTriggerTime();
                 long duration = now - adShowTime;
-                DbManager.insertEventRow(c, duration, "AdIsTouched", "MyUserName", "MyAdName", "ForeGroundAppName", "TestCaseName");
+                DbManager.insertEventRow(c, duration, AD_TOUCHED,
+                        pref.getString(USER_NAME_PREF, ""),
+                        pref.getString(AD_NAME_PREF, ""),
+                        pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
+                        pref.getString(CURRENT_TESTCASE_NAME, "") );
                 //Delete cache
                 cache.clear();
                 Log.d(TAG, "DOWN and eventrow inserted.");
@@ -78,5 +92,19 @@ public class AdFloatingViewManager extends FloatingViewManager {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onTrashAnimationEnd(int animationCode) {
+        //Trashview is going out.
+        if(animationCode == 2){
+            DbManager.insertEventRow(c, 0, AD_DELETED_BY_USER,
+                    pref.getString(USER_NAME_PREF, ""),
+                    pref.getString(AD_NAME_PREF, ""),
+                    pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
+                    pref.getString(CURRENT_TESTCASE_NAME, ""));
+            Log.d(TAG, "trashAnimation is ending.");
+        }
+        super.onTrashAnimationEnd(animationCode);
     }
 }

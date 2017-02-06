@@ -73,7 +73,7 @@ public final class DbManager {
         c.getContentResolver().bulkInsert(Provider.LocationEntry.CONTENT_URI, tmp);
     }
 
-    public static void insertEventRow(Context c, long duration,String event_name, String user_name,
+    public static void insertEventRow(Context c, long duration, String event_name, String user_name,
                                       String ad_name, String app_name, String testcase_name
                                       ) {
         ContentValues values = new ContentValues();

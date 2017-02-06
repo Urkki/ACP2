@@ -150,6 +150,10 @@ public class Provider extends ContentProvider {
         public static final String COLUMN_NAME_CURRENT_AD_NAME = "current_ad_name";
         public static final String COLUMN_NAME_CURRENT_APP_NAME = "current_app_name";
         public static final String COLUMN_NAME_TEST_CASE_NAME= "test_case_name";
+
+        public static final String AD_DELETED_BY_USER = "ad_is_deleted_by_user";
+        public static final String AD_TOUCHED = "ad_is_touched";
+        public static final String AD_IS_CREATED = "ad_is_created";
     }
 
     //EventTable

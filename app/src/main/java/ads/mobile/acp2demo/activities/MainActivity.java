@@ -24,14 +24,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.aware.Aware;
-import com.aware.Aware_Preferences;
-import com.aware.providers.Aware_Provider;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-import ads.mobile.acp2demo.Plugin;
 import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.R;
@@ -49,7 +44,13 @@ public class MainActivity extends AppCompatActivity {
     public AppsList apps;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
-    private Context _context = null;
+
+    public static final String USER_NAME_PREF = "CURRENT_USER_NAME";
+    public static final String AD_NAME_PREF = "CURRENT_AD_NAME";
+    public static final String CURRENT_FOREGROUD_APP_NAME = "CURRENT_FOREGROUND_APP_NAME";
+    public static final String CURRENT_TESTCASE_NAME = "CURRENT_TESTCASE_NAME";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +71,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
 
-
-
-        Aware.DEBUG = true;
+        Aware.DEBUG = false;
         //Initialise AWARE
         Intent aware = new Intent(this, Aware.class);
         startService(aware);
@@ -89,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
         }
         //overLayPermission
         requestOverLayPermission();
+        //Write to external storage.
+        requestWriteExternalStoragePermission();
+
+
         binding.setApps(apps);
         ListView listView = (ListView) findViewById(R.id.appListView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -159,6 +162,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void requestWriteExternalStoragePermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted");
+            } else {
+
+                Log.v(TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted");
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     boolean hasUsageStatsPermission(Context context) {
         AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
@@ -186,5 +205,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
+        }
     }
 }

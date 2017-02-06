@@ -8,7 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -20,6 +22,13 @@ import java.util.Arrays;
 
 import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.classes.AppsList;
+import ads.mobile.acp2demo.db.DbManager;
+
+import static ads.mobile.acp2demo.Provider.EventEntry.AD_IS_CREATED;
+import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
+import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.USER_NAME_PREF;
 
 
 public class AppCheckerService extends Service {
@@ -38,7 +47,7 @@ public class AppCheckerService extends Service {
     private AppChecker appChecker;
     private boolean adIsTriggered = false;
     private boolean appListIsChanged = true;
-
+    private static SharedPreferences pref;
     private static long adTriggerTime = 0;
 
     public static void start(Context context) {
@@ -68,6 +77,7 @@ public class AppCheckerService extends Service {
         startChecker();
         Notification n = createStickyNotification();
         startForeground(NOTIFICATION_ID, n);
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
     @Override
@@ -128,6 +138,11 @@ public class AppCheckerService extends Service {
         getBaseContext().startService(new Intent(getBaseContext(), AdViewService.class));
         //Get current time
         adTriggerTime = System.currentTimeMillis();
+        DbManager.insertEventRow(getApplicationContext(), 0, AD_IS_CREATED,
+                pref.getString(USER_NAME_PREF, ""),
+                pref.getString(AD_NAME_PREF, ""),
+                pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
+                pref.getString(CURRENT_TESTCASE_NAME, "") );
     }
 
     public void removeAdView() {
