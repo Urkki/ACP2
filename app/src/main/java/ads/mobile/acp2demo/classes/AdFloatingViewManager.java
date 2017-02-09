@@ -24,8 +24,8 @@ import ads.mobile.acp2demo.services.AppCheckerService;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
-import static ads.mobile.acp2demo.Provider.EventEntry.AD_DELETED_BY_USER;
-import static ads.mobile.acp2demo.Provider.EventEntry.AD_TOUCHED;
+import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_DELETED_BY_USER;
+import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_TOUCHED;
 import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
 import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
@@ -45,6 +45,8 @@ public class AdFloatingViewManager extends FloatingViewManager {
     ArrayList<ContentValues> cache = new ArrayList<>(15);
     private static SharedPreferences pref;
     private String device_id;
+    private static long adTouchedTime = 0;
+
     public AdFloatingViewManager(Context context, FloatingViewListener listener) {
         super(context, listener);
         c = context;
@@ -61,10 +63,10 @@ public class AdFloatingViewManager extends FloatingViewManager {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: // touched down
                 //Get touched time
-                long now = System.currentTimeMillis();
+                adTouchedTime = System.currentTimeMillis();
                 long adShowTime = AppCheckerService.getAdTriggerTime();
-                long duration = now - adShowTime;
-                DbManager.insertEventRow(c, duration, AD_TOUCHED,
+                long duration = adTouchedTime - adShowTime;
+                DbManager.insertEventRow(c, duration, SMALL_AD_TOUCHED,
                         pref.getString(USER_NAME_PREF, ""),
                         pref.getString(AD_NAME_PREF, ""),
                         pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
@@ -98,13 +100,13 @@ public class AdFloatingViewManager extends FloatingViewManager {
     public void onTrashAnimationEnd(int animationCode) {
         //Trashview is going out.
         if(animationCode == 2){
-            DbManager.insertEventRow(c, 0, AD_DELETED_BY_USER,
-                    pref.getString(USER_NAME_PREF, ""),
-                    pref.getString(AD_NAME_PREF, ""),
-                    pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
-                    pref.getString(CURRENT_TESTCASE_NAME, ""));
+
             Log.d(TAG, "trashAnimation is ending.");
         }
         super.onTrashAnimationEnd(animationCode);
+    }
+
+    public static long getAdTouchedTime() {
+        return adTouchedTime;
     }
 }

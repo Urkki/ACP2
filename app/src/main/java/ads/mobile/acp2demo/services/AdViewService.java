@@ -27,9 +27,15 @@ import ads.mobile.acp2demo.R;
 
 import ads.mobile.acp2demo.activities.AdDialogActivity;
 import ads.mobile.acp2demo.classes.AdFloatingViewManager;
+import ads.mobile.acp2demo.db.DbManager;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
+import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_DELETED_BY_USER;
+import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
+import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.USER_NAME_PREF;
 
 
 /**
@@ -61,6 +67,7 @@ public class AdViewService extends Service implements FloatingViewListener {
     /**
      * {@inheritDoc}
      */
+    private static SharedPreferences pref;
     @Override
     public int onStartCommand(Intent intent, final int flags, int startId) {
         // 既にManagerが存在していたら何もしない
@@ -87,6 +94,7 @@ public class AdViewService extends Service implements FloatingViewListener {
             }
         });
 
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         mFloatingViewManager = new AdFloatingViewManager(this, this);
         mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_trash_fixed);
@@ -128,6 +136,13 @@ public class AdViewService extends Service implements FloatingViewListener {
         i.putExtra("reason", "dno");
         sendBroadcast(i);
         Log.d(TAG, "Ad STOP broadcast is sended.");
+        // small ad deletion time - small ad triggertime.
+        long dur = System.currentTimeMillis() - AppCheckerService.getAdTriggerTime();
+        DbManager.insertEventRow(getApplicationContext(), dur, SMALL_AD_DELETED_BY_USER,
+                pref.getString(USER_NAME_PREF, ""),
+                pref.getString(AD_NAME_PREF, ""),
+                pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
+                pref.getString(CURRENT_TESTCASE_NAME, ""));
         onDestroy();
         stopSelf();
     }

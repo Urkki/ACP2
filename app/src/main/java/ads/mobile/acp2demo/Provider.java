@@ -151,9 +151,13 @@ public class Provider extends ContentProvider {
         public static final String COLUMN_NAME_CURRENT_APP_NAME = "current_app_name";
         public static final String COLUMN_NAME_TEST_CASE_NAME= "test_case_name";
 
-        public static final String AD_DELETED_BY_USER = "ad_is_deleted_by_user";
-        public static final String AD_TOUCHED = "ad_is_touched";
-        public static final String AD_IS_CREATED = "ad_is_created";
+        //small ad
+        public static final String SMALL_AD_DELETED_BY_USER = "small_ad_is_deleted_by_user";
+        public static final String SMALL_AD_TOUCHED = "small_ad_is_touched";
+        public static final String SMALL_AD_IS_CREATED = "small_ad_is_created";
+        //big ad
+        public static final String BIG_AD_SHOWN = "big_ad_is_shown";
+        public static final String BIG_AD_CLOSED = "big_ad_is_closed_by_user";
     }
 
     //EventTable

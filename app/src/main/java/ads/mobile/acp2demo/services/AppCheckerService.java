@@ -24,7 +24,7 @@ import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.db.DbManager;
 
-import static ads.mobile.acp2demo.Provider.EventEntry.AD_IS_CREATED;
+import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_CREATED;
 import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
 import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
@@ -138,7 +138,7 @@ public class AppCheckerService extends Service {
         getBaseContext().startService(new Intent(getBaseContext(), AdViewService.class));
         //Get current time
         adTriggerTime = System.currentTimeMillis();
-        DbManager.insertEventRow(getApplicationContext(), 0, AD_IS_CREATED,
+        DbManager.insertEventRow(getApplicationContext(), 0, SMALL_AD_IS_CREATED,
                 pref.getString(USER_NAME_PREF, ""),
                 pref.getString(AD_NAME_PREF, ""),
                 pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
