@@ -98,11 +98,6 @@ public class AdFloatingViewManager extends FloatingViewManager {
 
     @Override
     public void onTrashAnimationEnd(int animationCode) {
-        //Trashview is going out.
-        if(animationCode == 2){
-
-            Log.d(TAG, "trashAnimation is ending.");
-        }
         super.onTrashAnimationEnd(animationCode);
     }
 

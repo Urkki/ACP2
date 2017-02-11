@@ -20,11 +20,14 @@ import com.rvalerio.fgchecker.AppChecker;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ads.mobile.acp2demo.Manifest;
 import ads.mobile.acp2demo.R;
+import ads.mobile.acp2demo.activities.MainActivity;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.db.DbManager;
 
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_CREATED;
+import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_REMOVED_BY_SYSTEM;
 import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
 import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
@@ -97,9 +100,12 @@ public class AppCheckerService extends Service {
                 .other(new AppChecker.Listener() {
                     @Override
                     public void onForeground(String packageName) {
+                        //Update foreground app
+                        pref.edit().putString(MainActivity.CURRENT_FOREGROUD_APP_NAME, packageName).apply();
                         //UI list has changed.
                         if(appListIsChanged) {
                             getUpdatedAppList(packageName);
+                            DbManager.insertDeviceInfoRow(getApplicationContext(), pref.getString(MainActivity.USER_NAME_PREF, ""));
                         }
                         if(selectedApps != null) {
                             //Foreground app is selected and ad is not triggered before.
@@ -147,6 +153,12 @@ public class AppCheckerService extends Service {
 
     public void removeAdView() {
         getBaseContext().stopService(new Intent(getBaseContext(), AdViewService.class));
+        long dur = System.currentTimeMillis() - adTriggerTime;
+        DbManager.insertEventRow(getApplicationContext(), dur, SMALL_AD_IS_REMOVED_BY_SYSTEM,
+                pref.getString(USER_NAME_PREF, ""),
+                pref.getString(AD_NAME_PREF, ""),
+                pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
+                pref.getString(CURRENT_TESTCASE_NAME, "") );
     }
 
     public static long getAdTriggerTime() {

@@ -25,23 +25,23 @@ public final class DbManager {
 
     private static String TAG =  DbManager.class.getSimpleName();
 
-    private static String device_id = null;
+//    private static String device_id = null;
     private DbManager() {}
 
     public static void insertDeviceInfoRow (Context c, String user_name)
     {
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
-//        String[] projection = {
-//                Provider.DeviceInfoEntity.DEVICE_ID
-//        };
-//        String selection = Provider.DeviceInfoEntity.COLUMN_NAME_USER_NAME + " = ?";
-//        String[] selectionArgs = { user_name };
-//
-//        Cursor cur = c.getContentResolver().query(Provider.DeviceInfoEntity.CONTENT_URI,
-//                projection,selection,selectionArgs, null);
-//        //if this row is not in db.
-//        if (cur != null && cur.getCount() == 0)
+        String[] projection = {
+                Provider.DeviceInfoEntity.DEVICE_ID
+        };
+        String selection = Provider.DeviceInfoEntity.COLUMN_NAME_USER_NAME + " = ?";
+        String[] selectionArgs = { user_name };
+
+        Cursor cur = c.getContentResolver().query(Provider.DeviceInfoEntity.CONTENT_URI,
+                projection,selection,selectionArgs, null);
+        //if this row is not in db.
+        if (cur != null && cur.getCount() == 0)
         {
             //screen axis
             WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
@@ -63,10 +63,10 @@ public final class DbManager {
             Log.d(TAG, "device_info inserted, width: " + String.valueOf(width) +
                     " height: " + String.valueOf(height) + " user_name: " + user_name);
         }
-//        else {
-//            cur.close();
-//        }
-        device_id = getSetting(c, Aware_Preferences.DEVICE_ID);
+        else {
+            cur.close();
+        }
+//        device_id = getSetting(c, Aware_Preferences.DEVICE_ID);
     }
 
     public static void insertLocationBulkRow(Context c, ContentValues[] tmp) {

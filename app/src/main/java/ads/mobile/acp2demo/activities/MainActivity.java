@@ -114,13 +114,7 @@ public class MainActivity extends AppCompatActivity {
         });
         //Start service.
         AppCheckerService.start(getApplicationContext());
-        final Context tmpe = getApplicationContext();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                DbManager.insertDeviceInfoRow(tmpe, "asdfa2455");
-            }
-        }, 1000);
+
     }
     @TargetApi(M)
     @Override
