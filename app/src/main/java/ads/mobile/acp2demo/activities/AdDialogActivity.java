@@ -31,11 +31,7 @@ public class AdDialogActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ActionBar actionBar = getSupportActionBar();
-//        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 0);
-//        actionBar.hide();
+
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 

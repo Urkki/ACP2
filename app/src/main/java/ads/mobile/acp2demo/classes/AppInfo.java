@@ -2,8 +2,6 @@ package ads.mobile.acp2demo.classes;
 
 import android.content.pm.PackageInfo;
 import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-
 
 import java.io.Serializable;
 
@@ -22,26 +20,4 @@ public class AppInfo extends BaseObservable implements Serializable {
         this.AppName = appName;
         this.appPackageName = i.packageName;
     }
-
-//    @Bindable
-//    public String getAppName()
-//    {
-//        return this.AppName;
-//    }
-//
-//    public void setAppName(String mAppName) {
-//        this.AppName = mAppName;
-//        notifyPropertyChanged(com.android.databinding.library.baseAdapters.BR.appName);
-//    }
-//
-//    @Bindable
-//    public Boolean getIsUsed() {
-//        return IsSelected;
-//    }
-//
-//    public void setIsUsed(boolean newVal) {
-//        IsSelected = newVal;
-//        notifyPropertyChanged(BR.isUsed);
-//    }
-
 }
