@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -52,6 +53,7 @@ public class AppCheckerService extends Service {
     private boolean appListIsChanged = true;
     private static SharedPreferences pref;
     private static long adTriggerTime = 0;
+    private int adCounter = 0;
 
     public static void start(Context context) {
         context.startService(new Intent(context, AppCheckerService.class));
@@ -141,7 +143,17 @@ public class AppCheckerService extends Service {
     }
 
     public void showAdView(){
-        getBaseContext().startService(new Intent(getBaseContext(), AdViewService.class));
+        //Pass adCounter value to adService
+        Intent intent = new Intent(getBaseContext(), AdViewService.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("adCounter", adCounter);
+        intent.putExtras(bundle);
+        getBaseContext().startService(intent);
+        //Increments adCounter to move another ad
+        adCounter += 1;
+        if(adCounter > 3) {
+            adCounter = 0;
+        }
         //Get current time
         adTriggerTime = System.currentTimeMillis();
         DbManager.insertEventRow(getApplicationContext(), 0, SMALL_AD_IS_CREATED,
