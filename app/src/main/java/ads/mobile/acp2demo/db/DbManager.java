@@ -14,18 +14,12 @@ import com.aware.Aware_Preferences;
 
 import ads.mobile.acp2demo.Provider;
 
-import static android.R.attr.action;
-import static android.R.attr.value;
-import static android.R.attr.width;
-import static android.R.attr.x;
-import static android.R.attr.y;
 import static com.aware.Aware.getSetting;
 
 public final class DbManager {
 
     private static String TAG =  DbManager.class.getSimpleName();
 
-//    private static String device_id = null;
     private DbManager() {}
 
     public static void insertDeviceInfoRow (Context c, String user_name)
@@ -66,7 +60,6 @@ public final class DbManager {
         else {
             cur.close();
         }
-//        device_id = getSetting(c, Aware_Preferences.DEVICE_ID);
     }
 
     public static void insertLocationBulkRow(Context c, ContentValues[] tmp) {

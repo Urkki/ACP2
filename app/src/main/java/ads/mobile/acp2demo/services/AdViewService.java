@@ -165,26 +165,6 @@ public class AdViewService extends Service implements FloatingViewListener {
         }
     }
 
-    /**
-     * 通知を表示します。
-     */
-//    private Notification createNotification() {
-//        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-//        builder.setWhen(System.currentTimeMillis());
-//        builder.setSmallIcon(R.mipmap.ic_launcher);
-//        builder.setContentTitle(getString(R.string.mail_content_title));
-//        builder.setContentText(getString(R.string.content_text));
-//        builder.setOngoing(true);
-//        builder.setPriority(NotificationCompat.PRIORITY_MIN);
-//        builder.setCategory(NotificationCompat.CATEGORY_SERVICE);
-//
-//        // PendingIntent作成
-//        final Intent notifyIntent = new Intent(this, DeleteActionActivity.class);
-//        PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        builder.setContentIntent(notifyPendingIntent);
-//
-//        return builder.build();
-//    }
 
     /**
      * 動的に変更可能なオプションを読み込みます。
