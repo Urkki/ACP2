@@ -17,6 +17,11 @@ android:title="@string/app_name">
         android:title="@string/def_user_name"
         android:id="@+id/def_user"
         android:hint="Test User"/>
+    <EditTextPreference
+        android:key="pref_key_test_case"
+        android:title="@string/test_case"
+        android:id="@+id/test_case"
+        android:hint="Test Case"/>
 </PreferenceCategory>
 
 </PreferenceScreen>
