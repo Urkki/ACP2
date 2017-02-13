@@ -47,6 +47,9 @@
         <activity
             android:name=".activities.AdDialogActivity"
             android:theme="@style/AdDialogTheme"></activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="Settings" />
 
         <provider
             android:name="com.aware.providers.Scheduler_Provider"

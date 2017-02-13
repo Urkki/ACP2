@@ -9,4 +9,14 @@ android:title="@string/app_name">
     android:persistent="true"
     android:summary="Activate/deactivate plugin" />
 
+<PreferenceCategory
+    android:title="@string/general_settings_title"
+    android:key="pref_key_general_settings">
+    <EditTextPreference
+        android:key="pref_key_default_user"
+        android:title="@string/def_user_name"
+        android:id="@+id/def_user"
+        android:hint="Test User"/>
+</PreferenceCategory>
+
 </PreferenceScreen>

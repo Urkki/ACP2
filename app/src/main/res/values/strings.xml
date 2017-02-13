@@ -14,4 +14,8 @@
     <string name="mail_title">Title</string>
     <string name="mail_content">Message</string>
     <string name="stop_service">Stop Service</string>
+    <!-- Strings related to Settings -->
+    <string name="settings">Settings</string>
+    <string name="general_settings_title">General settings</string>
+    <string name="def_user_name">User name</string>
 </resources>
