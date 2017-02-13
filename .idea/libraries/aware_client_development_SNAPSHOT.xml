@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="aware-client-development-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.github.denzilferreira/aware-client/development-SNAPSHOT/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.github.denzilferreira/aware-client/development-SNAPSHOT/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.github.denzilferreira/aware-client/development-SNAPSHOT/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.denzilferreira/aware-client/development-SNAPSHOT/8c20d61b4f450459358a74c1504d4b015049150c/aware-client-development-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.denzilferreira/aware-client/development-SNAPSHOT/bfd0eea04c7a17ce19ed3c19ce9d33f6bda052f2/aware-client-development-SNAPSHOT-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
