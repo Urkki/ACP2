@@ -11,7 +11,6 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
@@ -33,7 +32,6 @@ import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.R;
 import ads.mobile.acp2demo.databinding.ActivityMainBinding;
-import ads.mobile.acp2demo.db.DbManager;
 import ads.mobile.acp2demo.services.AppCheckerService;
 
 import static ads.mobile.acp2demo.Plugin.NAME;
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
-
+        
         Aware.DEBUG = false;
         //Initialise AWARE
         Intent aware = new Intent(this, Aware.class);
@@ -116,13 +114,7 @@ public class MainActivity extends AppCompatActivity {
         });
         //Start service.
         AppCheckerService.start(getApplicationContext());
-        final Context tmpe = getApplicationContext();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                DbManager.insertDeviceInfoRow(tmpe, "asdfa2455");
-            }
-        }, 1000);
+
     }
     @TargetApi(M)
     @Override

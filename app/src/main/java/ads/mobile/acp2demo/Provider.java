@@ -29,7 +29,7 @@ public class Provider extends ContentProvider {
     /**
      * ContentProvider database version. Increment every time you modify the database structure
      */
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     /**
      * Database stored in storage as: plugin_example.db
      */
@@ -155,6 +155,8 @@ public class Provider extends ContentProvider {
         public static final String SMALL_AD_DELETED_BY_USER = "small_ad_is_deleted_by_user";
         public static final String SMALL_AD_TOUCHED = "small_ad_is_touched";
         public static final String SMALL_AD_IS_CREATED = "small_ad_is_created";
+        public static final String SMALL_AD_IS_REMOVED_BY_SYSTEM = "small_ad_is_removed_by_system";
+
         //big ad
         public static final String BIG_AD_SHOWN = "big_ad_is_shown";
         public static final String BIG_AD_CLOSED = "big_ad_is_closed_by_user";
@@ -330,7 +332,8 @@ public class Provider extends ContentProvider {
 
         ContentValues values = (new_values != null) ? new ContentValues(new_values) : new ContentValues();
         long _id;
-        switch (sUriMatcher.match(uri)) {
+        int match = sUriMatcher.match(uri);
+        switch (match) {
             case LOCATION_ENTRY:
                 _id = database.insert(DATABASE_TABLES[0],LocationEntry.DEVICE_ID, values);
                 if (_id > 0) {

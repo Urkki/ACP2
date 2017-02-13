@@ -39,10 +39,6 @@ public class AppsList implements Serializable {
             appsList.add(i);
         }
     }
-//    public void setApps(ArrayList<AppInfo> apps)
-//    {
-//        this.apps = apps;
-//    }
 
     public ObservableArrayList<AppInfo> getApps()
     {

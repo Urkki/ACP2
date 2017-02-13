@@ -25,15 +25,13 @@ public class AdDialogActivity extends AppCompatActivity {
     private static final String TAG = AdDialogActivity.class.getSimpleName();
     private static SharedPreferences pref;
     private long adDialogCreated = 0;
+    private int adCounter = 0;
+    int[] adArray = {R.drawable.img_test1, R.drawable.img_test2, R.drawable.img_test3, R.drawable.img_test4};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ActionBar actionBar = getSupportActionBar();
-//        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 0);
-//        actionBar.hide();
+
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 
@@ -52,7 +50,10 @@ public class AdDialogActivity extends AppCompatActivity {
         this.setFinishOnTouchOutside(false);
 
         setContentView(R.layout.ad_dialog);
-
+        ImageView ad = (ImageView) findViewById(R.id.ad_imageView);
+        final Bundle bundle = getIntent().getExtras();
+        adCounter = bundle.getInt("adCounter");
+        ad.setImageResource(adArray[adCounter]);
         ImageView image = (ImageView) findViewById(R.id.closeImageView);
 
         image.setOnClickListener(new View.OnClickListener() {

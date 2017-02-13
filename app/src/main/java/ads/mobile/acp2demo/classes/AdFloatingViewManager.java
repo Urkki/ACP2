@@ -24,7 +24,6 @@ import ads.mobile.acp2demo.services.AppCheckerService;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
-import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_DELETED_BY_USER;
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_TOUCHED;
 import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
 import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
@@ -98,11 +97,6 @@ public class AdFloatingViewManager extends FloatingViewManager {
 
     @Override
     public void onTrashAnimationEnd(int animationCode) {
-        //Trashview is going out.
-        if(animationCode == 2){
-
-            Log.d(TAG, "trashAnimation is ending.");
-        }
         super.onTrashAnimationEnd(animationCode);
     }
 
