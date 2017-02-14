@@ -74,19 +74,28 @@ public class AdFloatingViewManager extends FloatingViewManager {
                 cache.clear();
                 Log.d(TAG, "DOWN and eventrow inserted.");
                 //insert data to cache.
-                cache.add(createLocationContentValue("DOWN", x, y, device_id));
+                cache.add(createLocationContentValue("DOWN", x, y, device_id,
+                        pref.getString(PREF_USER_NAME, ""), pref.getString(PREF_AD_NAME, ""),
+                        pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                        pref.getString(PREF_CURRENT_TESTCASE_NAME, "") ));
                 break;
             case MotionEvent.ACTION_MOVE: // moving
                 // Record event every 500 ms (0.5 sec)
                 if( (time - prevTime) >= HALF_SEC_IN_MILLIS){
                     prevTime = time;
                     Log.d(TAG, String.valueOf(time) + " x: " + String.valueOf(x) + " y: " + String.valueOf(y) );
-                    cache.add(createLocationContentValue("MOVING", x, y, device_id));
+                    cache.add(createLocationContentValue("MOVING", x, y, device_id,
+                            pref.getString(PREF_USER_NAME, ""), pref.getString(PREF_AD_NAME, ""),
+                            pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                            pref.getString(PREF_CURRENT_TESTCASE_NAME, "")));
                 }
                 break;
             case MotionEvent.ACTION_UP: // touch is released
                 Log.d(TAG,"UP");
-                cache.add(createLocationContentValue("UP", x, y, device_id));
+                cache.add(createLocationContentValue("UP", x, y, device_id,
+                        pref.getString(PREF_USER_NAME, ""), pref.getString(PREF_AD_NAME, ""),
+                        pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                        pref.getString(PREF_CURRENT_TESTCASE_NAME, "")));
                 //insert data to db.
                 ContentValues[] tmp = cache.toArray(new ContentValues[cache.size()]);
                 DbManager.insertLocationBulkRow(c, tmp);

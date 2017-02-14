@@ -106,13 +106,13 @@ public class AppCheckerService extends Service {
                         //UI list has changed.
                         if(appListIsChanged) {
                             getUpdatedAppList(packageName);
-                            DbManager.insertDeviceInfoRow(getApplicationContext(), pref.getString(MainActivity.PREF_USER_NAME, ""));
                         }
                         if(selectedApps != null) {
                             //Foreground app is selected and ad is not triggered before.
                             if(selectedApps.contains(packageName) && !adIsTriggered) {
                                 Log.d(TAG, "ad is triggered.");
                                 adIsTriggered = true;
+                                DbManager.insertDeviceInfoRow(getApplicationContext(), pref.getString(MainActivity.PREF_USER_NAME, ""));
                                 showAdView();
                             }
                             //Foreground app is not selected and ad is triggered before.

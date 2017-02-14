@@ -83,16 +83,18 @@ public final class DbManager {
         Log.d(TAG, "eventRow inserted. " +  values.toString());
     }
 
-    public static ContentValues createLocationContentValue( String action, int x, int y, String device_id  ) {
+    public static ContentValues createLocationContentValue( String action, int x, int y, String device_id,
+                                                            String user_name, String element_name, String app_name,
+                                                            String test_case_name) {
         ContentValues cont = new ContentValues();
         Long now = System.currentTimeMillis();
-        cont.put(Provider.LocationEntry.COLUMN_NAME_USER_NAME, "asdf");
+        cont.put(Provider.LocationEntry.COLUMN_NAME_USER_NAME, user_name);
         cont.put(Provider.LocationEntry.DEVICE_ID, device_id);
         cont.put(Provider.LocationEntry.TIMESTAMP, now);
-        cont.put(Provider.LocationEntry.COLUMN_NAME_ELEMENT_NAME, "element_name");
+        cont.put(Provider.LocationEntry.COLUMN_NAME_ELEMENT_NAME, element_name);
         cont.put(Provider.LocationEntry.COLUMN_NAME_ACTION, action);
-        cont.put(Provider.LocationEntry.COLUMN_NAME_CURRENT_APP_NAME, "asdf");
-        cont.put(Provider.LocationEntry.COLUMN_NAME_TEST_CASE_NAME, "asdf");
+        cont.put(Provider.LocationEntry.COLUMN_NAME_CURRENT_APP_NAME, app_name);
+        cont.put(Provider.LocationEntry.COLUMN_NAME_TEST_CASE_NAME, test_case_name);
         cont.put(Provider.LocationEntry.COLUMN_NAME_X, x);
         cont.put(Provider.LocationEntry.COLUMN_NAME_Y, y);
         return cont;
