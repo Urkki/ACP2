@@ -19,4 +19,7 @@
     <string name="general_settings_title">General settings</string>
     <string name="def_user_name">User name</string>
     <string name="test_case">Test case</string>
+    <string name="pref_user_name">CURRENT_USER_NAME</string>
+    <string name="pref_test_case">CURRENT_TESTCASE_NAME</string>
+    <string name="pref_plugin_enabled">PLUGIN_ENABLED</string>
 </resources>

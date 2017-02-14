@@ -4,8 +4,8 @@ android:key="plugin_template"
 android:title="@string/app_name">
 
 <CheckBoxPreference
-    android:key="status_plugin_template"
-    android:defaultValue="false"
+    android:key="@string/pref_plugin_enabled"
+    android:defaultValue="true"
     android:persistent="true"
     android:summary="Activate/deactivate plugin" />
 
@@ -13,12 +13,12 @@ android:title="@string/app_name">
     android:title="@string/general_settings_title"
     android:key="pref_key_general_settings">
     <EditTextPreference
-        android:key="pref_key_default_user"
+        android:key="@string/pref_user_name"
         android:title="@string/def_user_name"
         android:id="@+id/def_user"
         android:hint="Test User"/>
     <EditTextPreference
-        android:key="pref_key_test_case"
+        android:key="@string/pref_test_case"
         android:title="@string/test_case"
         android:id="@+id/test_case"
         android:hint="Test Case"/>

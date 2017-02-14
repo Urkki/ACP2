@@ -5,12 +5,14 @@ import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
@@ -27,6 +29,8 @@ import android.widget.Toast;
 import com.aware.Aware;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.prefs.Preferences;
 
 import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
@@ -36,7 +40,10 @@ import ads.mobile.acp2demo.services.AppCheckerService;
 
 import static ads.mobile.acp2demo.Plugin.NAME;
 import static ads.mobile.acp2demo.Settings.STATUS_PLUGIN_AD_DEMO;
+import static android.R.attr.key;
 import static android.os.Build.VERSION_CODES.M;
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.google.android.gms.wallet.PaymentInstrumentType.getAll;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,22 +52,22 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
 
-    public static final String USER_NAME_PREF = "CURRENT_USER_NAME";
-    public static final String AD_NAME_PREF = "CURRENT_AD_NAME";
-    public static final String CURRENT_FOREGROUD_APP_NAME = "CURRENT_FOREGROUND_APP_NAME";
-    public static final String CURRENT_TESTCASE_NAME = "CURRENT_TESTCASE_NAME";
+    public static String PREF_USER_NAME = "CURRENT_USER_NAME";
+    public static final String PREF_AD_NAME = "CURRENT_AD_NAME";
+    public static final String PREF_CURRENT_FOREGROUD_APP_NAME = "CURRENT_FOREGROUND_APP_NAME";
+    public static String PREF_CURRENT_TESTCASE_NAME = "PREF_CURRENT_TESTCASE_NAME";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        PREF_USER_NAME = getString(R.string.pref_user_name);
+        PREF_CURRENT_TESTCASE_NAME = getString(R.string.pref_test_case);
         //Get installed apps
         apps = AppsList.load(getApplicationContext());
         if (apps == null) {
             apps = new AppsList(loadInstalledApps());
         }
-
         // The request code used in ActivityCompat.requestPermissions()
         // and returned in the Activity's onRequestPermissionsResult()
         int PERMISSION_ALL = 1;
@@ -102,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
                 boolean success = apps.save(getApplicationContext());
                 //notify service that list has changed...
                 Intent i = new Intent(AppCheckerService.SEND_LIST_CHANGED);
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext( ));
+                Map<String,?> afd = pref.getAll();
+//                Log.d(TAG,  pref.getString());
                 Log.d(TAG, "Sending broadcast.");
                 sendBroadcast(i);
                 if (!success) {

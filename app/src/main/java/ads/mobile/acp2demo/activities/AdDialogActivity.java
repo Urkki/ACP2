@@ -16,10 +16,10 @@ import ads.mobile.acp2demo.classes.AdFloatingViewManager;
 import ads.mobile.acp2demo.db.DbManager;
 import ads.mobile.acp2demo.services.AppCheckerService;
 
-import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
-import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
-import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
-import static ads.mobile.acp2demo.activities.MainActivity.USER_NAME_PREF;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_AD_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_FOREGROUD_APP_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_TESTCASE_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
 
 public class AdDialogActivity extends AppCompatActivity {
     private static final String TAG = AdDialogActivity.class.getSimpleName();
@@ -40,10 +40,10 @@ public class AdDialogActivity extends AppCompatActivity {
         long duration = adDialogCreated - AdFloatingViewManager.getAdTouchedTime();
         //insert event and time between ad is touched and big ad is shown.
         DbManager.insertEventRow(getApplicationContext(), duration, Provider.EventEntry.BIG_AD_SHOWN,
-                pref.getString(USER_NAME_PREF, ""),
-                pref.getString(AD_NAME_PREF, ""),
-                pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
-                pref.getString(CURRENT_TESTCASE_NAME, "") );
+                pref.getString(PREF_USER_NAME, ""),
+                pref.getString(PREF_AD_NAME, ""),
+                pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
         //Hide Titlebar
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         //Modal dialog.
@@ -62,10 +62,10 @@ public class AdDialogActivity extends AppCompatActivity {
                 //ad is closed - time when ad is shown
                 long duration = System.currentTimeMillis() - adDialogCreated;
                 DbManager.insertEventRow(getApplicationContext(), duration, Provider.EventEntry.BIG_AD_CLOSED,
-                        pref.getString(USER_NAME_PREF, ""),
-                        pref.getString(AD_NAME_PREF, ""),
-                        pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
-                        pref.getString(CURRENT_TESTCASE_NAME, "") );
+                        pref.getString(PREF_USER_NAME, ""),
+                        pref.getString(PREF_AD_NAME, ""),
+                        pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                        pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
                 finish();
             }
         });

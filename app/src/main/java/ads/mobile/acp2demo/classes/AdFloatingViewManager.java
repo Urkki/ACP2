@@ -25,10 +25,10 @@ import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_TOUCHED;
-import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
-import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
-import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
-import static ads.mobile.acp2demo.activities.MainActivity.USER_NAME_PREF;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_AD_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_FOREGROUD_APP_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_TESTCASE_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
 import static ads.mobile.acp2demo.db.DbManager.createLocationContentValue;
 
 /**
@@ -66,10 +66,10 @@ public class AdFloatingViewManager extends FloatingViewManager {
                 long adShowTime = AppCheckerService.getAdTriggerTime();
                 long duration = adTouchedTime - adShowTime;
                 DbManager.insertEventRow(c, duration, SMALL_AD_TOUCHED,
-                        pref.getString(USER_NAME_PREF, ""),
-                        pref.getString(AD_NAME_PREF, ""),
-                        pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
-                        pref.getString(CURRENT_TESTCASE_NAME, "") );
+                        pref.getString(PREF_USER_NAME, ""),
+                        pref.getString(PREF_AD_NAME, ""),
+                        pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                        pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
                 //Delete cache
                 cache.clear();
                 Log.d(TAG, "DOWN and eventrow inserted.");

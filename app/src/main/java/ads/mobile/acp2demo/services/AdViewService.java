@@ -33,10 +33,10 @@ import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_DELETED_BY_USER;
-import static ads.mobile.acp2demo.activities.MainActivity.AD_NAME_PREF;
-import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_FOREGROUD_APP_NAME;
-import static ads.mobile.acp2demo.activities.MainActivity.CURRENT_TESTCASE_NAME;
-import static ads.mobile.acp2demo.activities.MainActivity.USER_NAME_PREF;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_AD_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_FOREGROUD_APP_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_TESTCASE_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
 
 
 /**
@@ -147,10 +147,10 @@ public class AdViewService extends Service implements FloatingViewListener {
         // small ad deletion time - small ad triggertime.
         long dur = System.currentTimeMillis() - AppCheckerService.getAdTriggerTime();
         DbManager.insertEventRow(getApplicationContext(), dur, SMALL_AD_DELETED_BY_USER,
-                pref.getString(USER_NAME_PREF, ""),
-                pref.getString(AD_NAME_PREF, ""),
-                pref.getString(CURRENT_FOREGROUD_APP_NAME, ""),
-                pref.getString(CURRENT_TESTCASE_NAME, ""));
+                pref.getString(PREF_USER_NAME, ""),
+                pref.getString(PREF_AD_NAME, ""),
+                pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                pref.getString(PREF_CURRENT_TESTCASE_NAME, ""));
         onDestroy();
         stopSelf();
     }
