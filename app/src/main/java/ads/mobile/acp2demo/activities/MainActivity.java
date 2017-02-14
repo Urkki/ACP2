@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         PREF_USER_NAME = getString(R.string.pref_user_name);
         PREF_CURRENT_TESTCASE_NAME = getString(R.string.pref_test_case);
+
         //Get installed apps
         apps = AppsList.load(getApplicationContext());
         if (apps == null) {

@@ -80,7 +80,7 @@ public class AdFloatingViewManager extends FloatingViewManager {
                 // Record event every 500 ms (0.5 sec)
                 if( (time - prevTime) >= HALF_SEC_IN_MILLIS){
                     prevTime = time;
-                    Log.d(TAG, String.valueOf(time) + " x: " + String.valueOf(x) + "y: " + String.valueOf(y) );
+                    Log.d(TAG, String.valueOf(time) + " x: " + String.valueOf(x) + " y: " + String.valueOf(y) );
                     cache.add(createLocationContentValue("MOVING", x, y, device_id));
                 }
                 break;

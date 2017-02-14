@@ -155,11 +155,6 @@ public class AppCheckerService extends Service {
         }
         //Get current time
         adTriggerTime = System.currentTimeMillis();
-        DbManager.insertEventRow(getApplicationContext(), 0, SMALL_AD_IS_CREATED,
-                pref.getString(PREF_USER_NAME, ""),
-                pref.getString(PREF_AD_NAME, ""),
-                pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
-                pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
     }
 
     public void removeAdView() {

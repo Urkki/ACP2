@@ -35,15 +35,11 @@ public class AdDialogActivity extends AppCompatActivity {
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 
+
         //Save time when big ad is shown
         adDialogCreated = System.currentTimeMillis();
         long duration = adDialogCreated - AdFloatingViewManager.getAdTouchedTime();
-        //insert event and time between ad is touched and big ad is shown.
-        DbManager.insertEventRow(getApplicationContext(), duration, Provider.EventEntry.BIG_AD_SHOWN,
-                pref.getString(PREF_USER_NAME, ""),
-                pref.getString(PREF_AD_NAME, ""),
-                pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
-                pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
+
         //Hide Titlebar
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         //Modal dialog.
@@ -54,6 +50,8 @@ public class AdDialogActivity extends AppCompatActivity {
         final Bundle bundle = getIntent().getExtras();
         adCounter = bundle.getInt("adCounter");
         ad.setImageResource(adArray[adCounter]);
+
+
         ImageView image = (ImageView) findViewById(R.id.closeImageView);
 
         image.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +67,16 @@ public class AdDialogActivity extends AppCompatActivity {
                 finish();
             }
         });
+        //update image name
+        String img_name = getResources().getResourceEntryName(adArray[adCounter]);
+        pref.edit().putString(MainActivity.PREF_AD_NAME, img_name).commit();
 
+        //insert event and time between ad is touched and big ad is shown.
+        DbManager.insertEventRow(getApplicationContext(), duration, Provider.EventEntry.BIG_AD_SHOWN,
+                pref.getString(PREF_USER_NAME, ""),
+                pref.getString(PREF_AD_NAME, ""),
+                pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
     }
 
     public void sendAdTerminatedSignal(){

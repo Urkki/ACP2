@@ -27,12 +27,14 @@ import ads.mobile.acp2demo.R;
 
 
 import ads.mobile.acp2demo.activities.AdDialogActivity;
+import ads.mobile.acp2demo.activities.MainActivity;
 import ads.mobile.acp2demo.classes.AdFloatingViewManager;
 import ads.mobile.acp2demo.db.DbManager;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
 
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_DELETED_BY_USER;
+import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_CREATED;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_AD_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_FOREGROUD_APP_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_TESTCASE_NAME;
@@ -88,6 +90,7 @@ public class AdViewService extends Service implements FloatingViewListener {
         adCounter = bundle.getInt("adCounter");
         adimageButton.setImageResource(adArray[adCounter]);
 
+
         adimageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +106,15 @@ public class AdViewService extends Service implements FloatingViewListener {
         });
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //update image name
+        String img_name = getResources().getResourceEntryName(adArray[adCounter]);
+        pref.edit().putString(MainActivity.PREF_AD_NAME, img_name).commit();
+        //Add event to the db.
+        DbManager.insertEventRow(getApplicationContext(), 0, SMALL_AD_IS_CREATED,
+                pref.getString(PREF_USER_NAME, ""),
+                pref.getString(PREF_AD_NAME, ""),
+                pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
 
         mFloatingViewManager = new AdFloatingViewManager(this, this);
         mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_trash_fixed);
