@@ -25,6 +25,13 @@ import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
 public class AdDialogActivity extends AppCompatActivity {
     private static final String TAG = AdDialogActivity.class.getSimpleName();
     private static SharedPreferences pref;
+
+    public static boolean isBigAdShown() {
+        return bigAdShown;
+    }
+
+    private static boolean bigAdShown = false;
+
     private long adDialogCreated = 0;
     private int adCounter = 0;
     int[] adArray = {R.drawable.img_test1, R.drawable.hese_big_ad, R.drawable.img_test2, R.drawable.img_test3, R.drawable.img_test4};
@@ -33,6 +40,7 @@ public class AdDialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        bigAdShown = true;
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 
@@ -65,6 +73,7 @@ public class AdDialogActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
                 intent.setData(Uri.parse(uriArray[adCounter]));
                 startActivity(intent);
+                bigAdShown = false;
             }
         });
 
@@ -81,6 +90,7 @@ public class AdDialogActivity extends AppCompatActivity {
                         pref.getString(PREF_AD_NAME, ""),
                         pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
                         pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
+                bigAdShown = false;
                 finish();
             }
         });

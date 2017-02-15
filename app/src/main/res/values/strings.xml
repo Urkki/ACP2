@@ -1,6 +1,6 @@
 <!-- Thanks @domenukk -->
 <resources>
-    <string name="app_name">ASelect apps where ads are shown.</string>
+    <string name="app_name">AdDisplayer</string>
     <string name="chathead_content_title">Demo Chat: Active</string>
     <string name="content_text">Demo running.</string>
     <string name="mail_content_title">Demo Customize: active</string>

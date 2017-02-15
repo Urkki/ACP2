@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
@@ -22,11 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import ads.mobile.acp2demo.R;
+import ads.mobile.acp2demo.activities.AdDialogActivity;
 import ads.mobile.acp2demo.activities.MainActivity;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.db.DbManager;
 
-import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_CREATED;
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_REMOVED_BY_SYSTEM;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_AD_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_FOREGROUD_APP_NAME;
@@ -49,10 +51,33 @@ public class AppCheckerService extends Service {
 
     private AppChecker appChecker;
     private boolean adIsTriggered = false;
+    private boolean adCreationCooldownEnabled = false;
     private boolean appListIsChanged = true;
     private static SharedPreferences pref;
     private static long adTriggerTime = 0;
     private int adCounter = 0;
+    private static final int CHANGE_AD_DELAY = 20000; // 20 seconds.
+    private static final int SMALL_AD_COOLDOWN_DELAY = 20000; // 20 seconds.
+
+    private static final int CHANGE_AD = 1;
+    private static final int SMALL_AD_COOLDOWN = 2;
+    // this handler will receive a delayed message
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // Change Ad when small ad is triggered and big ad is not shown.
+            if (msg.what == CHANGE_AD && adIsTriggered && !AdDialogActivity.isBigAdShown()) {
+                removeAdView();
+                showAdView();
+                //Trigger change ad timer.
+                mHandler.sendEmptyMessageDelayed(CHANGE_AD, CHANGE_AD_DELAY);
+            }
+            //Change cd boolean to false so ad can be triggered again.
+            else if(msg.what == SMALL_AD_COOLDOWN && adCreationCooldownEnabled){
+                adCreationCooldownEnabled = false;
+            }
+        }
+    };
 
     public static void start(Context context) {
         context.startService(new Intent(context, AppCheckerService.class));
@@ -108,18 +133,16 @@ public class AppCheckerService extends Service {
                             getUpdatedAppList(packageName);
                         }
                         if(selectedApps != null) {
-                            //Foreground app is selected and ad is not triggered before.
-                            if(selectedApps.contains(packageName) && !adIsTriggered) {
+                            //Foreground app is selected and ad is not triggered before and
+                            // there is no cd on triggering ads.
+                            if(selectedApps.contains(packageName) && !adIsTriggered
+                                    && !adCreationCooldownEnabled) {
                                 Log.d(TAG, "ad is triggered.");
                                 adIsTriggered = true;
                                 DbManager.insertDeviceInfoRow(getApplicationContext(), pref.getString(MainActivity.PREF_USER_NAME, ""));
-                                //Shows ad only if last ad has been shown 20 seconds ago
-                                while (true) {
-                                    if (System.currentTimeMillis() - adTriggerTime >= 20000){
-                                        showAdView();
-                                        break;
-                                    }
-                                }
+                                showAdView();
+                                //Trigger change ad timer.
+                                mHandler.sendEmptyMessageDelayed(CHANGE_AD, CHANGE_AD_DELAY);
                             }
                             //Foreground app is not selected and ad is triggered before.
                             if(!selectedApps.contains(packageName) && adIsTriggered) {
@@ -203,6 +226,8 @@ public class AppCheckerService extends Service {
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "Ad is terminated.");
                 adIsTriggered = false;
+                adCreationCooldownEnabled = true;
+                mHandler.sendEmptyMessageDelayed(SMALL_AD_COOLDOWN, SMALL_AD_COOLDOWN_DELAY);
             }
         };
         registerReceiver(stopServiceReceiver, new IntentFilter(STOP_SERVICE));
