@@ -113,7 +113,13 @@ public class AppCheckerService extends Service {
                                 Log.d(TAG, "ad is triggered.");
                                 adIsTriggered = true;
                                 DbManager.insertDeviceInfoRow(getApplicationContext(), pref.getString(MainActivity.PREF_USER_NAME, ""));
-                                showAdView();
+                                //Shows ad only if last ad has been shown 20 seconds ago
+                                while (true) {
+                                    if (System.currentTimeMillis() - adTriggerTime >= 20000){
+                                        showAdView();
+                                        break;
+                                    }
+                                }
                             }
                             //Foreground app is not selected and ad is triggered before.
                             if(!selectedApps.contains(packageName) && adIsTriggered) {
@@ -148,9 +154,9 @@ public class AppCheckerService extends Service {
         bundle.putInt("adCounter", adCounter);
         intent.putExtras(bundle);
         getBaseContext().startService(intent);
-        //Increments adCounter to move another ad
+        //Increments adCounter to change ad, remember to edit limit if ads are added or removed
         adCounter += 1;
-        if(adCounter > 3) {
+        if(adCounter > 4) {
             adCounter = 0;
         }
         //Get current time

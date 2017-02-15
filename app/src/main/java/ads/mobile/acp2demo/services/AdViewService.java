@@ -47,7 +47,7 @@ import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
  */
 public class AdViewService extends Service implements FloatingViewListener {
     private int adCounter = 0;
-    int[] adArray = {R.drawable.ic_ad1, R.drawable.ic_ad2, R.drawable.ic_ad3, R.drawable.ic_ad4};
+    int[] adArray = {R.drawable.ic_ad1, R.drawable.hese_icon, R.drawable.ic_ad2, R.drawable.ic_ad3, R.drawable.ic_ad4};
     /**
      * デバッグログ用のタグ
      */
@@ -72,6 +72,7 @@ public class AdViewService extends Service implements FloatingViewListener {
      * {@inheritDoc}
      */
     private static SharedPreferences pref;
+
     @Override
     public int onStartCommand(Intent intent, final int flags, int startId) {
         // 既にManagerが存在していたら何もしない
@@ -89,7 +90,6 @@ public class AdViewService extends Service implements FloatingViewListener {
         final Bundle bundle = intent.getExtras();
         adCounter = bundle.getInt("adCounter");
         adimageButton.setImageResource(adArray[adCounter]);
-
 
         adimageButton.setOnClickListener(new View.OnClickListener() {
             @Override

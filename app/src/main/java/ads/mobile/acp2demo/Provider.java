@@ -159,6 +159,7 @@ public class Provider extends ContentProvider {
 
         //big ad
         public static final String BIG_AD_SHOWN = "big_ad_is_shown";
+        public static final String BIG_AD_LINK_CLICKED = "big_ad_link_is_clicked";
         public static final String BIG_AD_CLOSED = "big_ad_is_closed_by_user";
     }
 

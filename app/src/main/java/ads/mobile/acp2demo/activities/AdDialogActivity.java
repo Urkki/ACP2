@@ -2,6 +2,7 @@ package ads.mobile.acp2demo.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +27,8 @@ public class AdDialogActivity extends AppCompatActivity {
     private static SharedPreferences pref;
     private long adDialogCreated = 0;
     private int adCounter = 0;
-    int[] adArray = {R.drawable.img_test1, R.drawable.img_test2, R.drawable.img_test3, R.drawable.img_test4};
-
+    int[] adArray = {R.drawable.img_test1, R.drawable.hese_big_ad, R.drawable.img_test2, R.drawable.img_test3, R.drawable.img_test4};
+    String[] uriArray = {"http://google.com", "http://hesburger.fi", "http://google.com", "http://google.com", "http://google.com"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,22 @@ public class AdDialogActivity extends AppCompatActivity {
         final Bundle bundle = getIntent().getExtras();
         adCounter = bundle.getInt("adCounter");
         ad.setImageResource(adArray[adCounter]);
+
+        ad.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                long duration = System.currentTimeMillis() - adDialogCreated;
+                DbManager.insertEventRow(getApplicationContext(), duration, Provider.EventEntry.BIG_AD_LINK_CLICKED,
+                        pref.getString(PREF_USER_NAME, ""),
+                        pref.getString(PREF_AD_NAME, ""),
+                        pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+                        pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(uriArray[adCounter]));
+                startActivity(intent);
+            }
+        });
 
 
         ImageView image = (ImageView) findViewById(R.id.closeImageView);
