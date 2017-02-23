@@ -34,8 +34,8 @@ public class AdDialogActivity extends AppCompatActivity {
 
     private long adDialogCreated = 0;
     private int adCounter = 0;
-    int[] adArray = {R.drawable.img_test1, R.drawable.hese_big_ad, R.drawable.img_test2, R.drawable.img_test3, R.drawable.img_test4};
-    String[] uriArray = {"http://google.com", "http://hesburger.fi", "http://google.com", "http://google.com", "http://google.com"};
+    int[] adArray = {R.drawable.bk_big_ad, R.drawable.hese_big_ad, R.drawable.img_test2, R.drawable.img_test3, R.drawable.img_test4};
+    String[] uriArray = {"http://bk.com", "http://hesburger.fi", "http://google.com", "http://google.com", "http://google.com"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

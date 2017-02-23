@@ -16,6 +16,7 @@
             android:contentDescription="@string/app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:scaleType="fitXY"
             android:src="@drawable/img_my_shoe" />
 
         <ImageView
@@ -29,19 +30,6 @@
     </FrameLayout>
 
 </TableRow>
-
-<TableRow>
-    <TextView
-        android:text="kjgaskldfjasklfslfsklfsdakfdjdfskl"
-        android:id="@+id/textView6"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="22dp" />
-</TableRow>
-
-
-
-
 
 
 </TableLayout>

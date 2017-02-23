@@ -47,7 +47,7 @@ import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
  */
 public class AdViewService extends Service implements FloatingViewListener {
     private int adCounter = 0;
-    int[] adArray = {R.drawable.ic_ad1, R.drawable.hese_icon, R.drawable.ic_ad2, R.drawable.ic_ad3, R.drawable.ic_ad4};
+    int[] adArray = {R.drawable.bk_icon, R.drawable.hese_icon, R.drawable.ic_ad2, R.drawable.ic_ad3, R.drawable.ic_ad4};
     /**
      * デバッグログ用のタグ
      */
