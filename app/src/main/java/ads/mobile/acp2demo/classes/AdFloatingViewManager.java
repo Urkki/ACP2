@@ -8,6 +8,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.WindowManager;
 
 
 import com.aware.Aware;
@@ -46,11 +49,14 @@ public class AdFloatingViewManager extends FloatingViewManager {
     private String device_id;
     private static long adTouchedTime = 0;
 
+    private final WindowManager mWindowManager;
+
     public AdFloatingViewManager(Context context, FloatingViewListener listener) {
         super(context, listener);
         c = context;
         device_id = Aware.getSetting(c, Aware_Preferences.DEVICE_ID);
         pref = PreferenceManager.getDefaultSharedPreferences(c);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
     @Override
@@ -112,4 +118,16 @@ public class AdFloatingViewManager extends FloatingViewManager {
     public static long getAdTouchedTime() {
         return adTouchedTime;
     }
+
+//    @Override
+//    public void addViewToWindow(View view, Options options) {
+//        super.addViewToWindow(view, options);
+//        ViewParent p = view.getParent();
+//        View p2 = (View) p;
+//        p2.setLayoutParams(new ViewGroup.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT
+//        ));
+//        Log.d("dfs","asdf");
+//    }
 }

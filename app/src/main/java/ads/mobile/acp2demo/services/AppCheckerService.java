@@ -56,8 +56,8 @@ public class AppCheckerService extends Service {
     private static SharedPreferences pref;
     private static long adTriggerTime = 0;
     private int adCounter = 0;
-    private static final int CHANGE_AD_DELAY = 20000; // 20 seconds.
-    private static final int SMALL_AD_COOLDOWN_DELAY = 20000; // 20 seconds.
+    private static final int CHANGE_AD_DELAY = 30000; // 30 seconds.
+    private static final int SMALL_AD_COOLDOWN_DELAY = 30000; // 30 seconds.
 
     private static final int CHANGE_AD = 1;
     private static final int SMALL_AD_COOLDOWN = 2;

@@ -22,6 +22,8 @@ import android.widget.ImageView;
 
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import ads.mobile.acp2demo.R;
 
@@ -47,7 +49,16 @@ import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
  */
 public class AdViewService extends Service implements FloatingViewListener {
     private int adCounter = 0;
-    int[] adArray = {R.drawable.bk_icon, R.drawable.hese_icon, R.drawable.ic_ad2, R.drawable.ic_ad3, R.drawable.ic_ad4};
+    int[] bannerAdArray = {R.drawable.bk_icon, R.drawable.bk_icon, R.drawable.bk_icon, R.drawable.bk_icon, R.drawable.bk_icon};
+    int[] iconAdArray = {R.drawable.bk_icon, R.drawable.hese_icon, R.drawable.ic_ad2, R.drawable.ic_ad3, R.drawable.ic_ad4};
+
+    //Dict for choosing selected array.
+    Map<String, int[]> adArrayChooser = new HashMap<String, int[]>() {{
+        put("banner", bannerAdArray);
+        put("icon", iconAdArray);
+    }};
+
+    int[] currentAdArray = iconAdArray;
     /**
      * デバッグログ用のタグ
      */
@@ -79,6 +90,10 @@ public class AdViewService extends Service implements FloatingViewListener {
         if (mFloatingViewManager != null) {
             return START_STICKY;
         }
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //Change correct array.
+        String s = pref.getString(MainActivity.PREF_CURRENT_IMG_ARRAY_NAME, "icon"); //TODO: FIXME:
+        currentAdArray = adArrayChooser.get(s);
 
         final DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -89,7 +104,7 @@ public class AdViewService extends Service implements FloatingViewListener {
         //Reads adCounter value from bundle and changes ad icon
         final Bundle bundle = intent.getExtras();
         adCounter = bundle.getInt("adCounter");
-        adimageButton.setImageResource(adArray[adCounter]);
+        adimageButton.setImageResource(currentAdArray[adCounter]);
 
         adimageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,9 +120,9 @@ public class AdViewService extends Service implements FloatingViewListener {
             }
         });
 
-        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         //update image name
-        String img_name = getResources().getResourceEntryName(adArray[adCounter]);
+        String img_name = getResources().getResourceEntryName(currentAdArray[adCounter]);
         pref.edit().putString(MainActivity.PREF_AD_NAME, img_name).commit();
         //Add event to the db.
         DbManager.insertEventRow(getApplicationContext(), 0, SMALL_AD_IS_CREATED,
@@ -127,7 +142,6 @@ public class AdViewService extends Service implements FloatingViewListener {
         mFloatingViewManager.addViewToWindow(adimageButton, options);
         return START_REDELIVER_INTENT;
     }
-
     /**
      * {@inheritDoc}
      */

@@ -3,11 +3,12 @@
 android:key="plugin_template"
 android:title="@string/app_name">
 
-<CheckBoxPreference
-    android:key="@string/pref_plugin_enabled"
-    android:defaultValue="true"
-    android:persistent="true"
-    android:summary="Activate/deactivate plugin" />
+<!--<CheckBoxPreference-->
+    <!--android:key="@string/pref_plugin_enabled"-->
+    <!--android:defaultValue="true"-->
+    <!--android:persistent="true"-->
+    <!--android:summary="Activate/deactivate plugin" />-->
+
 
 <PreferenceCategory
     android:title="@string/general_settings_title"
@@ -22,6 +23,12 @@ android:title="@string/app_name">
         android:title="@string/test_case"
         android:id="@+id/test_case"
         android:hint="Test Case"/>
+    <EditTextPreference
+        android:key="@string/pref_img_array_name"
+        android:title="@string/img_arr_name"
+        android:defaultValue="@string/arr_name"
+        android:id="@+id/img_array_name"
+        android:hint="icon or banner"/>
 </PreferenceCategory>
 
 </PreferenceScreen>

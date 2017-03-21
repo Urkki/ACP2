@@ -56,18 +56,27 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREF_AD_NAME = "CURRENT_AD_NAME";
     public static final String PREF_CURRENT_FOREGROUD_APP_NAME = "CURRENT_FOREGROUND_APP_NAME";
     public static String PREF_CURRENT_TESTCASE_NAME = "PREF_CURRENT_TESTCASE_NAME";
+    public static String PREF_CURRENT_IMG_ARRAY_NAME = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Init constants
         PREF_USER_NAME = getString(R.string.pref_user_name);
         PREF_CURRENT_TESTCASE_NAME = getString(R.string.pref_test_case);
-
+        PREF_CURRENT_IMG_ARRAY_NAME = getString(R.string.pref_img_array_name);
         //Get installed apps
         apps = AppsList.load(getApplicationContext());
         if (apps == null) {
             apps = new AppsList(loadInstalledApps());
+        }
+        //load shared preference if it is null.
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (!pref.contains(PREF_CURRENT_IMG_ARRAY_NAME)){
+            SharedPreferences.Editor e = pref.edit();
+            e.putString(PREF_CURRENT_IMG_ARRAY_NAME, "icon");
+            e.commit();
         }
         // The request code used in ActivityCompat.requestPermissions()
         // and returned in the Activity's onRequestPermissionsResult()

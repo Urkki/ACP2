@@ -60,22 +60,22 @@ public class AdDialogActivity extends AppCompatActivity {
         adCounter = bundle.getInt("adCounter");
         ad.setImageResource(adArray[adCounter]);
 
-        ad.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                long duration = System.currentTimeMillis() - adDialogCreated;
-                DbManager.insertEventRow(getApplicationContext(), duration, Provider.EventEntry.BIG_AD_LINK_CLICKED,
-                        pref.getString(PREF_USER_NAME, ""),
-                        pref.getString(PREF_AD_NAME, ""),
-                        pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
-                        pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(uriArray[adCounter]));
-                startActivity(intent);
-                bigAdShown = false;
-            }
-        });
+//        ad.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                long duration = System.currentTimeMillis() - adDialogCreated;
+//                DbManager.insertEventRow(getApplicationContext(), duration, Provider.EventEntry.BIG_AD_LINK_CLICKED,
+//                        pref.getString(PREF_USER_NAME, ""),
+//                        pref.getString(PREF_AD_NAME, ""),
+//                        pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),
+//                        pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
+//                Intent intent = new Intent();
+//                intent.setAction(Intent.ACTION_VIEW);
+//                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+//                intent.setData(Uri.parse(uriArray[adCounter]));
+//                startActivity(intent);
+//                bigAdShown = false;
+//            }
+//        });
 
 
         ImageView image = (ImageView) findViewById(R.id.closeImageView);
