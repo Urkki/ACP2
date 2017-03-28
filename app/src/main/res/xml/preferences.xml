@@ -28,7 +28,7 @@ android:title="@string/app_name">
         android:title="@string/img_arr_name"
         android:defaultValue="@string/arr_name"
         android:id="@+id/img_array_name"
-        android:hint="icon or banner"/>
+        android:hint="icon, icon2, banner or banner2"/>
 </PreferenceCategory>
 
 </PreferenceScreen>

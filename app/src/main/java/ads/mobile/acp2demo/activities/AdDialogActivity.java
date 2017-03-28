@@ -33,9 +33,9 @@ public class AdDialogActivity extends AppCompatActivity {
     private static boolean bigAdShown = false;
 
     private long adDialogCreated = 0;
-    private int adCounter = 0;
-    int[] adArray = {R.drawable.bk_big_ad, R.drawable.hese_big_ad, R.drawable.img_test2, R.drawable.img_test3, R.drawable.img_test4};
-    String[] uriArray = {"http://bk.com", "http://hesburger.fi", "http://google.com", "http://google.com", "http://google.com"};
+//    private int adCounter = 0;
+//    int[] adArray = {R.drawable.bk_big_ad, R.drawable.hese_big_ad, R.drawable.hese_big_ad, R.drawable.hese_big_ad, R.drawable.hese_big_ad};
+//    String[] uriArray = {"http://bk.com", "http://hesburger.fi", "http://google.com", "http://google.com", "http://google.com"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +57,8 @@ public class AdDialogActivity extends AppCompatActivity {
         setContentView(R.layout.ad_dialog);
         ImageView ad = (ImageView) findViewById(R.id.ad_imageView);
         final Bundle bundle = getIntent().getExtras();
-        adCounter = bundle.getInt("adCounter");
-        ad.setImageResource(adArray[adCounter]);
+        int imgResId = bundle.getInt("img_res_id");
+        ad.setImageResource(imgResId);
 
 //        ad.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
@@ -95,7 +95,7 @@ public class AdDialogActivity extends AppCompatActivity {
             }
         });
         //update image name
-        String img_name = getResources().getResourceEntryName(adArray[adCounter]);
+        String img_name = getResources().getResourceEntryName(imgResId);
         pref.edit().putString(MainActivity.PREF_AD_NAME, img_name).commit();
 
         //insert event and time between ad is touched and big ad is shown.

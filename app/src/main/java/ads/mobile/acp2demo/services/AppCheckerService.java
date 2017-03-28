@@ -56,9 +56,11 @@ public class AppCheckerService extends Service {
     private boolean appListIsChanged = true;
     private static SharedPreferences pref;
     private static long adTriggerTime = 0;
+    private static String lastSelectedImageArrayName = "";
     private int adCounter = 0;
     private static final int CHANGE_AD_DELAY = 30000; // 30 seconds.
     private static final int SMALL_AD_COOLDOWN_DELAY = 30000; // 30 seconds.
+    private static final int MAX_AMOUNT_OF_ADS = 4;
 
     private static final int CHANGE_AD = 1;
     private static final int SMALL_AD_COOLDOWN = 2;
@@ -172,17 +174,23 @@ public class AppCheckerService extends Service {
     }
 
     public void showAdView(){
+
+        //IF user has changed the image array.
+        if (!pref.getString(PREF_CURRENT_IMG_ARRAY_NAME, "ffff").equals(lastSelectedImageArrayName) ) {
+            adCounter = 0;
+            lastSelectedImageArrayName = pref.getString(PREF_CURRENT_IMG_ARRAY_NAME, "ffff");
+        }
         //Pass adCounter value to adService
         Intent intent = new Intent(getBaseContext(), AdViewService.class);
         Bundle bundle = new Bundle();
         bundle.putInt("adCounter", adCounter);
-        boolean enableClickListener = pref.getString(PREF_CURRENT_IMG_ARRAY_NAME, "").equals("icon");
+        boolean enableClickListener = pref.getString(PREF_CURRENT_IMG_ARRAY_NAME, "").contains("icon");
         bundle.putBoolean("enableClickListener", enableClickListener);
         intent.putExtras(bundle);
         getBaseContext().startService(intent);
         //Increments adCounter to change ad, remember to edit limit if ads are added or removed
         adCounter += 1;
-        if(adCounter > 4) {
+        if(adCounter > MAX_AMOUNT_OF_ADS) {
             adCounter = 0;
         }
         //Get current time

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 
+import android.content.res.Resources;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,13 +55,17 @@ import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
  */
 public class AdViewService extends Service implements FloatingViewListener {
     private int adCounter = 0;
-    int[] bannerAdArray = {R.drawable.bk_icon, R.drawable.bk_icon, R.drawable.bk_icon, R.drawable.bk_icon, R.drawable.bk_icon};
-    int[] iconAdArray = {R.drawable.bk_icon, R.drawable.hese_icon, R.drawable.ic_ad2, R.drawable.ic_ad3, R.drawable.ic_ad4};
+    int[] bannerAdArray = {R.drawable.asos_banneri, R.drawable.citymarket_banneri, R.drawable.finnmari_banneri, R.drawable.junkyard_banneri, R.drawable.kaleva_banneri};
+    int[] bannerAdArray2 = {R.drawable.mcdonalds_banneri, R.drawable.norwegian_banneri, R.drawable.rooster_banneri, R.drawable.sokos_banneri, R.drawable.talouselama_banneri};
+    int[] iconAdArray = {R.drawable.bk_icon, R.drawable.ellos_icon, R.drawable.hese_icon, R.drawable.intersport_icon, R.drawable.matkapojat_icon};
+    int[] iconAdArray2 = {R.drawable.prisma_icon, R.drawable.qstock_icon, R.drawable.robertscoffee_icon, R.drawable.spiceice_icon, R.drawable.subway_icon};
 
     //Dict for choosing selected array.
     Map<String, int[]> adArrayChooser = new HashMap<String, int[]>() {{
         put("banner", bannerAdArray);
         put("icon", iconAdArray);
+        put("banner2", bannerAdArray2);
+        put("icon2", iconAdArray2);
     }};
 
     int[] currentAdArray = iconAdArray;
@@ -108,6 +114,16 @@ public class AdViewService extends Service implements FloatingViewListener {
         //Reads adCounter value from bundle and changes ad icon
         final Bundle bundle = intent.getExtras();
         adCounter = bundle.getInt("adCounter");
+
+        String img_name = getResources().getResourceEntryName(currentAdArray[adCounter]);
+        if (img_name.contains("icon"))
+        {
+            //Get bid ad resource id.
+            String p = img_name.replace("_icon","") +  "_big_ad";
+            int img_res_id = getId(p, R.drawable.class);
+            bundle.putInt("img_res_id", img_res_id);
+        }
+
         boolean allowAdClickListener = bundle.getBoolean("enableClickListener", true);
         adimageButton.setImageResource(currentAdArray[adCounter]);
         //Set listener
@@ -129,7 +145,6 @@ public class AdViewService extends Service implements FloatingViewListener {
 
 
         //update image name
-        String img_name = getResources().getResourceEntryName(currentAdArray[adCounter]);
         pref.edit().putString(MainActivity.PREF_AD_NAME, img_name).commit();
         //Add event to the db.
         DbManager.insertEventRow(getApplicationContext(), 0, SMALL_AD_IS_CREATED,
@@ -159,6 +174,17 @@ public class AdViewService extends Service implements FloatingViewListener {
             mFloatingViewManager.setTrashViewEnabled(false);
         }
         return START_REDELIVER_INTENT;
+    }
+
+
+    public static int getId(String resourceName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(resourceName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            throw new RuntimeException("No resource ID found for: "
+                    + resourceName + " / " + c, e);
+        }
     }
 
     /**
