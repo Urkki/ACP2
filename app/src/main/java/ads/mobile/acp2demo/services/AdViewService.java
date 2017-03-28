@@ -16,7 +16,10 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -34,6 +37,7 @@ import ads.mobile.acp2demo.classes.AdFloatingViewManager;
 import ads.mobile.acp2demo.db.DbManager;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
+
 
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_DELETED_BY_USER;
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_CREATED;
@@ -104,21 +108,24 @@ public class AdViewService extends Service implements FloatingViewListener {
         //Reads adCounter value from bundle and changes ad icon
         final Bundle bundle = intent.getExtras();
         adCounter = bundle.getInt("adCounter");
+        boolean allowAdClickListener = bundle.getBoolean("enableClickListener", true);
         adimageButton.setImageResource(currentAdArray[adCounter]);
-
-        adimageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // メールアプリの起動
-                final Intent intent = new Intent(getApplicationContext(), AdDialogActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_NO_HISTORY |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                stopSelf();
-            }
-        });
+        //Set listener
+        if(allowAdClickListener) {
+            adimageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // メールアプリの起動
+                    final Intent intent = new Intent(getApplicationContext(), AdDialogActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_NO_HISTORY |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    stopSelf();
+                }
+            });
+        }
 
 
         //update image name
@@ -132,16 +139,28 @@ public class AdViewService extends Service implements FloatingViewListener {
                 pref.getString(PREF_CURRENT_TESTCASE_NAME, "") );
 
         mFloatingViewManager = new AdFloatingViewManager(this, this);
-        mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_trash_fixed);
-        mFloatingViewManager.setActionTrashIconImage(R.drawable.ic_trash_action);
-        mFloatingViewManager.setTrashViewEnabled(true);
+
+        //set trash if we allow dragging
+        if(allowAdClickListener){
+            mFloatingViewManager.setFixedTrashIconImage(R.drawable.ic_trash_fixed);
+            mFloatingViewManager.setActionTrashIconImage(R.drawable.ic_trash_action);
+            mFloatingViewManager.setTrashViewEnabled(true);
+        }
+
+
         // Setting Options(you can change options at any time)
         loadDynamicOptions();
         // Initial Setting Options (you can't change options after created.)
         final FloatingViewManager.Options options = loadOptions(metrics);
+
         mFloatingViewManager.addViewToWindow(adimageButton, options);
+        // TODO: FIXME Disable dragging NOT WORKING!!
+        if(!allowAdClickListener){
+            mFloatingViewManager.setTrashViewEnabled(false);
+        }
         return START_REDELIVER_INTENT;
     }
+
     /**
      * {@inheritDoc}
      */

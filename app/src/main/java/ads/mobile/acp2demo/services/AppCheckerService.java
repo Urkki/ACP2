@@ -32,6 +32,7 @@ import ads.mobile.acp2demo.db.DbManager;
 import static ads.mobile.acp2demo.Provider.EventEntry.SMALL_AD_IS_REMOVED_BY_SYSTEM;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_AD_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_FOREGROUD_APP_NAME;
+import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_IMG_ARRAY_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_TESTCASE_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
 
@@ -175,6 +176,8 @@ public class AppCheckerService extends Service {
         Intent intent = new Intent(getBaseContext(), AdViewService.class);
         Bundle bundle = new Bundle();
         bundle.putInt("adCounter", adCounter);
+        boolean enableClickListener = pref.getString(PREF_CURRENT_IMG_ARRAY_NAME, "").equals("icon");
+        bundle.putBoolean("enableClickListener", enableClickListener);
         intent.putExtras(bundle);
         getBaseContext().startService(intent);
         //Increments adCounter to change ad, remember to edit limit if ads are added or removed

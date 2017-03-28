@@ -119,9 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 boolean success = apps.save(getApplicationContext());
                 //notify service that list has changed...
                 Intent i = new Intent(AppCheckerService.SEND_LIST_CHANGED);
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext( ));
-                Map<String,?> afd = pref.getAll();
-//                Log.d(TAG,  pref.getString());
+
                 Log.d(TAG, "Sending broadcast.");
                 sendBroadcast(i);
                 if (!success) {
