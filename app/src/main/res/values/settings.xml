@@ -4,9 +4,12 @@
     <string name="settings_title_display_mode">Display Mode</string>
     <string name="settings_title_margin">Margin</string>
     <string name="settings_title_move_direction">Move direction</string>
+    <string name="settings_title_save_position">Save the last position</string>>
+    <string name="settings_summary_save_position">Ignore the initial position of X, Y coordinates
+    </string>
     <string name="settings_title_init_x">Initial X coordinate(from left side)</string>
     <string name="settings_dialog_title_init_x">From left side ratio</string>
-    <string name="settings_title_init_y">Initial X coordinate(from bottom side)</string>
+    <string name="settings_title_init_y">Initial Y coordinate(from bottom side)</string>
     <string name="settings_dialog_title_init_y">From bottom side ratio</string>
     <string name="settings_title_animation">Initial animation</string>
 
@@ -88,6 +91,10 @@
         <item>25%</item>
         <item>50%</item>
         <item>75%</item>
+        <item>80%</item>
+        <item>85%</item>
+        <item>90%</item>
+        <item>95%</item>
         <item>100%</item>
         <item>150%</item>
     </string-array>
@@ -98,6 +105,10 @@
         <item>0.25</item>
         <item>0.5</item>
         <item>0.75</item>
+        <item>0.8</item>
+        <item>0.85</item>
+        <item>0.9</item>
+        <item>0.95</item>
         <item>1.0</item>
         <item>1.5</item>
     </string-array>

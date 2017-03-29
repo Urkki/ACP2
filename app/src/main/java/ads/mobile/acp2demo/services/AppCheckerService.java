@@ -35,6 +35,7 @@ import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_FOREGROUD
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_IMG_ARRAY_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_CURRENT_TESTCASE_NAME;
 import static ads.mobile.acp2demo.activities.MainActivity.PREF_USER_NAME;
+import static ads.mobile.acp2demo.classes.AdFloatingViewManager.adIsBeingDragged;
 
 
 public class AppCheckerService extends Service {
@@ -59,6 +60,7 @@ public class AppCheckerService extends Service {
     private static String lastSelectedImageArrayName = "";
     private int adCounter = 0;
     private static final int CHANGE_AD_DELAY = 30000; // 30 seconds.
+    private static final int CHANGE_DELAY_WHILE_AD_DRAGGED = 2000; // 2 seconds.
     private static final int SMALL_AD_COOLDOWN_DELAY = 30000; // 30 seconds.
     private static final int MAX_AMOUNT_OF_ADS = 4;
 
@@ -70,10 +72,16 @@ public class AppCheckerService extends Service {
         public void handleMessage(Message msg) {
             // Change Ad when small ad is triggered and big ad is not shown.
             if (msg.what == CHANGE_AD && adIsTriggered && !AdDialogActivity.isBigAdShown()) {
-                removeAdView();
-                showAdView();
-                //Trigger change ad timer.
-                mHandler.sendEmptyMessageDelayed(CHANGE_AD, CHANGE_AD_DELAY);
+                //if ad is currently selected/dragged, try to change ad again in few seconds.
+                if(adIsBeingDragged){
+                    mHandler.sendEmptyMessageDelayed(CHANGE_AD, CHANGE_DELAY_WHILE_AD_DRAGGED);
+                }
+                else {
+                    removeAdView();
+                    showAdView();
+                    //Trigger change ad timer.
+                    mHandler.sendEmptyMessageDelayed(CHANGE_AD, CHANGE_AD_DELAY);
+                }
             }
             //Change cd boolean to false so ad can be triggered again.
             else if(msg.what == SMALL_AD_COOLDOWN && adCreationCooldownEnabled){

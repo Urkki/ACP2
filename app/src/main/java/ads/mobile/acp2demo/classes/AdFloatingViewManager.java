@@ -48,6 +48,7 @@ public class AdFloatingViewManager extends FloatingViewManager {
     private static SharedPreferences pref;
     private String device_id;
     private static long adTouchedTime = 0;
+    public static boolean adIsBeingDragged = false;
 
 
     public AdFloatingViewManager(Context context, FloatingViewListener listener) {
@@ -67,6 +68,7 @@ public class AdFloatingViewManager extends FloatingViewManager {
             case MotionEvent.ACTION_DOWN: // touched down
                 //Get touched time
                 adTouchedTime = System.currentTimeMillis();
+                adIsBeingDragged = true;
                 long adShowTime = AppCheckerService.getAdTriggerTime();
                 long duration = adTouchedTime - adShowTime;
                 DbManager.insertEventRow(c, duration, SMALL_AD_TOUCHED,
@@ -96,6 +98,7 @@ public class AdFloatingViewManager extends FloatingViewManager {
                 break;
             case MotionEvent.ACTION_UP: // touch is released
                 Log.d(TAG,"UP");
+                adIsBeingDragged = false;
                 cache.add(createLocationContentValue("UP", x, y, device_id,
                         pref.getString(PREF_USER_NAME, ""), pref.getString(PREF_AD_NAME, ""),
                         pref.getString(PREF_CURRENT_FOREGROUD_APP_NAME, ""),

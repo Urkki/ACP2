@@ -71,13 +71,7 @@ public class MainActivity extends AppCompatActivity {
         if (apps == null) {
             apps = new AppsList(loadInstalledApps());
         }
-        //load shared preference if it is null.
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if (!pref.contains(PREF_CURRENT_IMG_ARRAY_NAME)){
-            SharedPreferences.Editor e = pref.edit();
-            e.putString(PREF_CURRENT_IMG_ARRAY_NAME, "icon");
-            e.commit();
-        }
+
         // The request code used in ActivityCompat.requestPermissions()
         // and returned in the Activity's onRequestPermissionsResult()
         int PERMISSION_ALL = 1;
@@ -87,7 +81,16 @@ public class MainActivity extends AppCompatActivity {
         if(!hasPermissions(this, PERMISSIONS)){
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
-        
+
+        //load shared preference if it is null.
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        if (!pref.contains(PREF_CURRENT_IMG_ARRAY_NAME)){
+            SharedPreferences.Editor e2 = pref.edit();
+            e2.putString(PREF_CURRENT_IMG_ARRAY_NAME, "icon");
+            e2.commit();
+        }
+
         Aware.DEBUG = false;
         //Initialise AWARE
         Intent aware = new Intent(this, Aware.class);
