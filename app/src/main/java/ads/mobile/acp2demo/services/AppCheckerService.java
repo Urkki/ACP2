@@ -59,9 +59,9 @@ public class AppCheckerService extends Service {
     private static long adTriggerTime = 0;
     private static String lastSelectedImageArrayName = "";
     private int adCounter = 0;
-    private static final int CHANGE_AD_DELAY = 30000; // 30 seconds.
+    private static final int CHANGE_AD_DELAY = 60000; // 60 seconds.
     private static final int CHANGE_DELAY_WHILE_AD_DRAGGED = 2000; // 2 seconds.
-    private static final int SMALL_AD_COOLDOWN_DELAY = 30000; // 30 seconds.
+    private static final int SMALL_AD_COOLDOWN_DELAY = 60000; // 60 seconds.
     private static final int MAX_AMOUNT_OF_ADS = 4;
 
     private static final int CHANGE_AD = 1;
