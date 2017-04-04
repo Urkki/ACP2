@@ -12,10 +12,12 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -27,11 +29,20 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.aware.Aware;
+import com.aware.utils.DatabaseHelper;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
+import ads.mobile.acp2demo.Provider;
 import ads.mobile.acp2demo.classes.AppInfo;
 import ads.mobile.acp2demo.classes.AppsList;
 import ads.mobile.acp2demo.R;
@@ -91,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             e2.commit();
         }
 
-        Aware.DEBUG = false;
+        Aware.DEBUG = true;
         //Initialise AWARE
         Intent aware = new Intent(this, Aware.class);
         startService(aware);
@@ -247,9 +258,65 @@ public class MainActivity extends AppCompatActivity {
                 Intent b = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(b);
                 break;
+            case R.id.action_download_db_files:
+                uploadDbFiles();
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void uploadDbFiles(){
+        Log.d(TAG, "uploading AWARE DB files to download folder.");
+        //DatabaseHelper dbh = new DatabaseHelper(this, Provider.DATABASE_NAME, null, Provider.DATABASE_VERSION, Provider.DATABASE_TABLES, Provider.TABLES_FIELDS);
+        File f = getAwareDatabaseFile(this, Provider.DATABASE_NAME);
+
+        File downloadFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Provider.DATABASE_NAME);
+        downloadFile.setReadable(true);
+        downloadFile.setWritable(true);
+        try{
+            copy(f, downloadFile);
+        }
+        catch (java.io.IOException e) {
+            Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT );
+        }
+        Toast.makeText(this,"DB files uploaded to: " + downloadFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+    }
+    private File getAwareDatabaseDirectory(Context context) {
+        File aware_folder;
+        if (!context.getResources().getBoolean(R.bool.standalone)) {
+            // sdcard/AWARE/     (shareable, does not delete when uninstalling)
+            aware_folder = new File(Environment.getExternalStoragePublicDirectory("AWARE").toString());
+        } else {
+            // sdcard/Android/<app_package_name>/AWARE/    (not shareable, deletes when uninstalling package)
+            aware_folder = new File(ContextCompat.getExternalFilesDirs(context, null)[0] + "/AWARE"); //compatible with API 10+
+        }
+        return aware_folder;
+    }
+
+    /**
+     * Get a certain database directory.  Thin wrapper over getAwareDatabaseDirectory.
+     *
+     * @param context       Application context (for getting files dir)
+     * @param database_name Name of database we want
+     * @return File of database.
+     */
+    private File getAwareDatabaseFile(Context context, String database_name) {
+        return new File(getAwareDatabaseDirectory(context), database_name);
+    }
+
+    public void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);
+
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
     }
 }

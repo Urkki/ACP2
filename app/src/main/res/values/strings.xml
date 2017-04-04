@@ -16,6 +16,7 @@
     <string name="stop_service">Stop Service</string>
     <!-- Strings related to Settings -->
     <string name="settings">Settings</string>
+    <string name="db_files">Load db files to Download folder</string>
     <string name="general_settings_title">General settings</string>
     <string name="def_user_name">User name</string>
     <string name="test_case">Test case</string>
